@@ -11,6 +11,7 @@
 	  <mockito.version>5.7.0</mockito.version>
 	  <slf4j.version>2.0.9</slf4j.version>
 	  <testcontainer.version>1.19.1</testcontainer.version>
+	  <log4j.version>2.21.1</log4j.version>
   </properties>
   
   <dependencies>
@@ -26,6 +27,17 @@
 		    <artifactId>assertj-core</artifactId>
 		    <version>3.24.2</version>
 		    <scope>test</scope>
+		</dependency>
+		<!-- Logging-->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		    <version>${log4j.version}</version>
 		</dependency>
 		<!-- ORM dependencies-->
 		<dependency>

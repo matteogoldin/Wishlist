@@ -1,23 +1,30 @@
 package model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Item extends BaseEntity {
+@IdClass(ItemPK.class)
+public class Item{
+	@Id
 	private String name;
-	private String desc;
-	private String price;
+	
+	@Id
 	@ManyToOne
 	private Wishlist wishlist;
+	
+	private String desc;
+	private String price;
 	
 	public Item() {}
 
 	public Item(String name, String desc, String price, Wishlist wishlist) {
 		this.name = name;
+		this.wishlist = wishlist;
 		this.desc = desc;
 		this.price = price;
-		this.wishlist = wishlist;
 	}
 
 	public String getName() {
