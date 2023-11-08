@@ -27,15 +27,29 @@ public class WishlistController {
 		try {
 			dao.addWL(wl);
 			wlList.add(wl);
-			view.refreshWL();
+			view.refreshWlList();
+			LOGGER.info("Wishlist %s correctly inserted", wl.getName());
 		} catch (EntityExistsException e) {
-			LOGGER.error("Wishlist " + wl.getName() + "already exist");
-			view.showError("Wishlist " + wl.getName() + "already exist");
+			view.showError("Wishlist " + wl.getName() + " already exists");
+		} catch (RuntimeException e) {
+			view.showError("Error: please try again");
 		}
 	}
 
+	public void removeWishlist(Wishlist wl) {
+		try {
+			dao.removeWL(wl.getName());
+			wlList.remove(wl);
+			view.refreshWlList();
+			LOGGER.info("Wishlist %s correctly removed", wl.getName());
+		} catch (IllegalArgumentException e) {
+			view.showError("Wishlist " + wl.getName() + " doesn't exist or has been already removed");
+			if(wlList.contains(wl)) wlList.remove(wl);
+		}
+		
+	}
+	
 	public List<Wishlist> getWlList() {
 		return wlList;
 	}
-
 }

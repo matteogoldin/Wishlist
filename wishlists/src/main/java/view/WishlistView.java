@@ -2,7 +2,7 @@ package view;
 
 public interface WishlistView {
 
-	void refreshWL();
+	void refreshWlList();
 
 	void showError(String string);
 
