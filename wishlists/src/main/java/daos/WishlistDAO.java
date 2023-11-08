@@ -1,20 +1,32 @@
 package daos;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TransactionRequiredException;
 import model.Wishlist;
 
-public class WishlistDAO{
+public class WishlistDAO implements BaseDAO<Wishlist>{
 	private static final Logger LOGGER = LogManager.getLogger(WishlistDAO.class);
-
-	public Wishlist findById(String anyString) {
-		// TODO Auto-generated method stub
+	
+	@Override
+	public Wishlist findById(String Id) {
+		try {
+			// TODO
+		} catch(NoResultException e) {
+			LOGGER.info(() -> String.format("No Wishlist found with Id: ", Id));
+			return null;
+		} catch(Exception e) {
+			//TODO
+		}
 		return null;
 	}
 	
-	public void addWL(Wishlist wl) throws EntityExistsException, RuntimeException{
+	@Override
+	public void add(Wishlist wl) throws EntityExistsException, RuntimeException{
 		try {
 			
 			//for each transaction is necessary a rollback if an exception occurs
@@ -33,8 +45,9 @@ public class WishlistDAO{
 		}
 		
 	}
-
-	public void removeWL(String Id) {
+	
+	@Override
+	public void remove(String Id) {
 		try {
 			
 		} catch (IllegalArgumentException e) {
@@ -42,6 +55,12 @@ public class WishlistDAO{
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public List<Wishlist> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

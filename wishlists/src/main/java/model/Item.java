@@ -16,13 +16,12 @@ public class Item{
 	private Wishlist wishlist;
 	
 	private String desc;
-	private String price;
+	private float price;
 	
 	public Item() {}
 
-	public Item(String name, String desc, String price, Wishlist wishlist) {
+	public Item(String name, String desc, float price) {
 		this.name = name;
-		this.wishlist = wishlist;
 		this.desc = desc;
 		this.price = price;
 	}
@@ -43,11 +42,11 @@ public class Item{
 		this.desc = desc;
 	}
 
-	public String getPrice() {
+	public float getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 
