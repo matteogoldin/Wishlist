@@ -2,9 +2,9 @@ package daos;
 
 import java.util.List;
 
-public interface BaseDAO<T>{
-	T findById(String id);
+public interface BaseDAO<T,Q>{
+	T findById(Q id);
 	List<T> getAll();
 	void add(T object);
-	void remove(String id);
+	void remove(T object);
 }
