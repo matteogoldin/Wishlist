@@ -8,6 +8,10 @@
   
   <properties>
 	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	  <mockito.version>5.7.0</mockito.version>
+	  <slf4j.version>2.0.9</slf4j.version>
+	  <testcontainer.version>1.19.1</testcontainer.version>
+	  <log4j.version>2.21.1</log4j.version>
   </properties>
   
   <dependencies>
@@ -24,6 +28,17 @@
 		    <version>3.24.2</version>
 		    <scope>test</scope>
 		</dependency>
+		<!-- Logging-->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		    <version>${log4j.version}</version>
+		</dependency>
 		<!-- ORM dependencies-->
 		<dependency>
 		    <groupId>mysql</groupId>
@@ -39,31 +54,44 @@
 		<dependency>
 		    <groupId>org.testcontainers</groupId>
 		    <artifactId>testcontainers</artifactId>
-		    <version>1.19.1</version>
+		    <version>${testcontainer.version}</version>
 		    <scope>test</scope>
 		</dependency>
 		<dependency>
 		    <groupId>org.testcontainers</groupId>
 		    <artifactId>junit-jupiter</artifactId>
-		    <version>1.19.1</version>
+		    <version>${testcontainer.version}</version>
 		    <scope>test</scope>
 		</dependency>
 		<dependency>
 		    <groupId>org.testcontainers</groupId>
 		    <artifactId>mysql</artifactId>
-		    <version>1.19.1</version>
+		    <version>${testcontainer.version}</version>
 		    <scope>test</scope>
 		</dependency>
 		<!-- Test container logging-->
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>
-		    <version>2.0.9</version>
+		    <version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-nop</artifactId>
-		    <version>2.0.9</version>
+		    <version>${slf4j.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- Mockito-->
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <version>${mockito.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-junit-jupiter</artifactId>
+		    <version>${mockito.version}</version>
 		    <scope>test</scope>
 		</dependency>
   </dependencies>
