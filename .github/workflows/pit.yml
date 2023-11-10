@@ -1,12 +1,20 @@
 name: pitest
 on:
-  pull_request:
+  push:    
     paths-ignore:
       - '**.md'
       - '**.yml'
       - '**.yaml'
-
-jobs:
+  pull_request:   
+    paths-ignore:
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
+      
+permissions:
+  contents: write
+  
+jobs:  
   build:
     runs-on: ubuntu-latest
 
