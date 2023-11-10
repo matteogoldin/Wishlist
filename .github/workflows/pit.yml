@@ -1,0 +1,49 @@
+name: pitest
+on:
+  push:    
+    paths-ignore:
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
+  pull_request:   
+    paths-ignore:
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
+      
+permissions:
+  contents: write
+  
+jobs:  
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      workdir: wishlists
+
+    name: Pit mutuation tests
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
+          restore-keys: ${{ runner.os }}-m2-
+   
+      - name: Build with Maven and run Mutation Testing
+        run: mvn verify -Ppit 
+        working-directory: ${{ env.workdir }}
+        
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/pit-reports/*/
