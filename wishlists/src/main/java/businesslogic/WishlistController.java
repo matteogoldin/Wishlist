@@ -1,14 +1,14 @@
 package businesslogic;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import daos.ItemDAO;
 import daos.WishlistDAO;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.NoResultException;
 import model.Item;
 import model.Wishlist;
 import view.WishlistView;
@@ -28,7 +28,7 @@ public class WishlistController {
 		wlList = new ArrayList<>();
 	}
 
-	public void addWishlist(Wishlist wl) { 
+	public void addWishlist(Wishlist wl) {
 		try {
 			wlDao.add(wl);
 			wlList.add(wl);

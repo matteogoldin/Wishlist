@@ -240,16 +240,16 @@
 				</plugins>
 			</build>
 		</profile>
+		
 		<profile>
 			<id>coveralls</id>
 			<build>
 				<plugins>
-					<plugin> <!-- configured in pluginManagement --> <!-- JaCoCo report is required by
-						coveralls-maven-plugin -->
+					<plugin> 
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 					</plugin>
-					<plugin> <!-- configured in pluginManagement -->
+					<plugin> 
 						<groupId>org.eluder.coveralls</groupId>
 						<artifactId>coveralls-maven-plugin</artifactId>
 						<executions>
