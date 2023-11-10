@@ -1,7 +1,6 @@
 name: CI code coverage
 
 on:
-  push:
   pull_request:
 
 jobs:
