@@ -17,11 +17,11 @@
 	</properties>
 
 	<dependencies>
+		<!-- Testing dependencies-->
 		<dependency>
-			<!-- Testing dependencies-->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.7.0</version>
+			<version>5.10.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -156,6 +156,12 @@
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
 					<version>4.3.0</version>
+				<!--	<configuration>
+						<jacocoReports>
+							<jacocoReport>
+								${project.build.outputDirectory}/site/jacoco/jacoco.xml</jacocoReport>
+						</jacocoReports>
+					</configuration>-->
 					<dependencies>
 						<dependency>
 							<groupId>javax.xml.bind</groupId>
@@ -174,8 +180,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -204,7 +209,12 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.2</version>
+			</plugin>
+			
 		</plugins>
 	</build>
 
@@ -240,16 +250,16 @@
 				</plugins>
 			</build>
 		</profile>
+
 		<profile>
 			<id>coveralls</id>
 			<build>
 				<plugins>
-					<plugin> <!-- configured in pluginManagement --> <!-- JaCoCo report is required by
-						coveralls-maven-plugin -->
+					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 					</plugin>
-					<plugin> <!-- configured in pluginManagement -->
+					<plugin>
 						<groupId>org.eluder.coveralls</groupId>
 						<artifactId>coveralls-maven-plugin</artifactId>
 						<executions>

@@ -2,10 +2,8 @@ package businesslogic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -13,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import daos.ItemDAO;
 import daos.WishlistDAO;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.NoResultException;
 import model.Item;
 import model.Wishlist;
 import view.WishlistView;
@@ -92,7 +89,7 @@ class WishlistControllerTest {
 		verify(view).showAllWLs(controller.getWlList());
 		assertThat(controller.getWlList()).isEmpty();
 	}
-	
+
 	@Test
 	void removingAWLNotPersistedButInTheWlListRemovesItFromTheList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
@@ -102,7 +99,7 @@ class WishlistControllerTest {
 		verify(view).showAllWLs(controller.getWlList());
 		assertThat(controller.getWlList()).isEmpty();
 	}
-	
+
 	@Test
 	void otherExceptionWhileRemovingAWLAreManaged() {
 		doThrow(new RuntimeException()).when(wlDao).remove(isA(Wishlist.class));
@@ -111,7 +108,7 @@ class WishlistControllerTest {
 		assertThat(controller.getWlList()).isEmpty();
 		verify(view).showError("Error: please try again");
 	}
-	
+
 	@Test
 	void itemCorrectlyAddedToWL() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
@@ -125,7 +122,7 @@ class WishlistControllerTest {
 		verify(view).showAllWLs(controller.getWlList());
 		verify(view).showAllItems(wl);
 	}
-	
+
 	@Test
 	void correctlyAddDuplicatedItemToDifferentWishlist() {
 		Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
@@ -168,7 +165,7 @@ class WishlistControllerTest {
 	void tryingToAddAnObjectInAWlNotPersistedShowError() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
-		when(wlDao.getAll()).thenReturn(new ArrayList<Wishlist>());
+		when(wlDao.getAll()).thenReturn(new ArrayList<>());
 		doThrow(new IllegalArgumentException()).when(itemDao).add(isA(Item.class));
 		controller.addItemToWishlist(item, wl);
 		assertThat(item.getWishlist()).isNull();
@@ -176,7 +173,7 @@ class WishlistControllerTest {
 		verify(view).showAllWLs(controller.getWlList());
 		verify(view).showAllItems(null);
 	}
-	
+
 	@Test
 	void otherExceptionWhileAddingAnItemToAWLAreManaged() {
 		doThrow(new RuntimeException()).when(itemDao).add(isA(Item.class));
@@ -187,7 +184,7 @@ class WishlistControllerTest {
 		assertThat(wl.getItems()).isEmpty();
 		verify(view).showError("Error: please try again");
 	}
-	
+
 	@Test
 	void correctlyRemovingAnObject() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
@@ -214,7 +211,7 @@ class WishlistControllerTest {
 		verify(view).showAllItems(wl);
 		verify(view).showAllWLs(controller.getWlList());
 	}
-	
+
 	@Test
 	void ifAnIllegalArgumentExceptionIsThrownRemovingAnItemIfTheWlIsNotInTheListUpdateTheList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
@@ -229,8 +226,8 @@ class WishlistControllerTest {
 		verify(view).showError(anyString());
 		verify(wlDao).getAll();
 	}
-	
-	@Test 
+
+	@Test
 	void ifAnIllegalArgumentExceptionIsThrownRemovingAnItemIfTheWlIsInTheListShowError(){
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
@@ -243,7 +240,7 @@ class WishlistControllerTest {
 		verify(view).showAllItems(wl);
 		verify(view).showError(anyString());
 	}
-	
+
 	@Test
 	void otherExceptionWhileRemovingAnItemToAWLAreManaged() {
 		doThrow(new RuntimeException()).when(itemDao).remove(isA(Item.class));
@@ -255,14 +252,14 @@ class WishlistControllerTest {
 		assertThat(wl.getItems()).hasSize(1);
 		verify(view).showError("Error: please try again");
 	}
-	
+
 	@Test
 	void refreshWishlistsGetWlsFromTheDaoAndSendThemToTheView() {
 		controller.refreshWishlists();
 		verify(wlDao).getAll();
 		verify(view).showAllWLs(controller.getWlList());
 	}
-	
+
 	@Test
 	void refreshWishlistManagesExceptionFromDao() {
 		when(wlDao.getAll()).thenThrow(new RuntimeException());
@@ -271,15 +268,18 @@ class WishlistControllerTest {
 		verify(view, times(0)).showAllWLs(controller.getWlList());
 		verify(view).showError(anyString());
 	}
-	
+
 	@Test
 	void refreshItemsGetItemsFromTheDaoAndSendThemToTheView() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
+		when(itemDao.getAllWLItems(wl.getName())).thenReturn(Arrays.asList(item));
 		controller.refreshItems(wl);
+		assertThat(wl.getItems()).isEqualTo(Arrays.asList(item));
 		verify(itemDao).getAllWLItems(wl.getName());
 		verify(view).showAllItems(wl);
 	}
-	
+
 	@Test
 	void refreshItemsManagesExceptionFromDao() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
