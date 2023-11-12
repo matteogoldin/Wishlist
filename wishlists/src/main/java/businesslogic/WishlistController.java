@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import daos.ItemDAO;
 import daos.WishlistDAO;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
 import view.WishlistView;
@@ -20,6 +21,7 @@ public class WishlistController {
 	private List<Wishlist> wlList;
 
 	private static final Logger LOGGER = LogManager.getLogger(WishlistController.class);
+	private static final String ERROR_STRING = "Error: please try again";
 
 	public WishlistController(WishlistView view, WishlistDAO wlDao, ItemDAO itemDao) {
 		this.view = view;
@@ -33,10 +35,10 @@ public class WishlistController {
 			wlDao.add(wl);
 			wlList.add(wl);
 			LOGGER.info(() -> String.format("Wishlist %s correctly inserted", wl.getName()));
-		} catch (EntityExistsException e) {
+		} catch (RollbackException e) {
 			view.showError("Wishlist " + wl.getName() + " already exists");
 		} catch (RuntimeException e) {
-			view.showError("Error: please try again");
+			view.showError(ERROR_STRING);
 		}
 		view.showAllWLs(wlList);
 	}

@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import daos.ItemDAO;
 import daos.WishlistDAO;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
 import view.WishlistView;
@@ -54,7 +55,7 @@ class WishlistControllerTest {
 	void addingWLWithSameNameShowError() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Wishlist wl_dup = new Wishlist("Birthday", "Mum birthday gifts");
-		doNothing().doThrow(new EntityExistsException()).when(wlDao).add(isA(Wishlist.class));
+		doNothing().doThrow(new RollbackException()).when(wlDao).add(isA(Wishlist.class));
 		controller.addWishlist(wl);
 		controller.addWishlist(wl_dup);
 		assertThat(controller.getWlList()).hasSize(1);
