@@ -30,6 +30,12 @@
 			<version>3.24.2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.2.224</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- Logging-->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -134,9 +140,11 @@
 					<configuration>
 						<targetClasses>
 							<param>businesslogic.*</param>
+							<param>daos.*</param>
 						</targetClasses>
 						<targetTests>
 							<param>businesslogic.*</param>
+							<param>daos.*</param>
 						</targetTests>
 						<mutators>
 							<mutator>DEFAULTS</mutator>
@@ -156,12 +164,6 @@
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
 					<version>4.3.0</version>
-				<!--	<configuration>
-						<jacocoReports>
-							<jacocoReport>
-								${project.build.outputDirectory}/site/jacoco/jacoco.xml</jacocoReport>
-						</jacocoReports>
-					</configuration>-->
 					<dependencies>
 						<dependency>
 							<groupId>javax.xml.bind</groupId>
@@ -214,7 +216,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.2.2</version>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 

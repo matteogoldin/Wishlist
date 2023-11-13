@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -13,21 +14,17 @@ public class Wishlist{
 	@Id
 	private String name;
 	
-	@OneToMany(mappedBy="wishlist")
+	@OneToMany(mappedBy="wishlist", cascade = CascadeType.ALL)
 	private List<Item> items;
 	
 	private String desc;
-	private int total;
 	
-	public Wishlist() {
-		total = 0;
-	}
+	public Wishlist() {	}
 
 	public Wishlist(String name, String desc) {
 		this.name = name;
 		this.desc = desc;
 		items = new ArrayList<>();
-		total = 0;
 	}
 
 	public String getName() {
@@ -54,10 +51,6 @@ public class Wishlist{
 		this.items = items;
 	}
 	
-	public int getTotal() {
-		return total;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(name);
