@@ -34,9 +34,8 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 					.getSingleResult();
 		} catch (NoResultException e) {
 			LOGGER.info(() -> String.format("No Wishlist found with Id: %s", id));
-			return null;
 		} finally {
-			closeEntityManager();
+			em.close();
 		}
 		return result;
 	}
@@ -56,12 +55,8 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 		List<Wishlist> result;
 		openEntityManager();
 		result = em.createQuery("SELECT wl FROM Wishlist wl", Wishlist.class).getResultList();
-		closeEntityManager();
-		return result;
-	}
-
-	private void closeEntityManager() {
 		em.close();
+		return result;
 	}
 
 	private void openEntityManager() {
@@ -85,7 +80,7 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 			transactionRollbackHandling(transaction, "Errors executing the transaction");
 			throw e;
 		} finally {
-			closeEntityManager();
+			em.close();
 		}
 	}
 
