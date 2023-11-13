@@ -140,9 +140,11 @@
 					<configuration>
 						<targetClasses>
 							<param>businesslogic.*</param>
+							<param>daos.*</param>
 						</targetClasses>
 						<targetTests>
 							<param>businesslogic.*</param>
+							<param>daos.*</param>
 						</targetTests>
 						<mutators>
 							<mutator>DEFAULTS</mutator>

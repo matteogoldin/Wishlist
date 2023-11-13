@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import daos.ItemDAO;
 import daos.WishlistDAO;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
 import view.WishlistView;
@@ -55,21 +54,12 @@ class WishlistControllerTest {
 	void addingWLWithSameNameShowError() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Wishlist wl_dup = new Wishlist("Birthday", "Mum birthday gifts");
-		doNothing().doThrow(new RollbackException()).when(wlDao).add(isA(Wishlist.class));
+		doNothing().doThrow(new RuntimeException()).when(wlDao).add(isA(Wishlist.class));
 		controller.addWishlist(wl);
 		controller.addWishlist(wl_dup);
 		assertThat(controller.getWlList()).hasSize(1);
 		verify(view, times(2)).showAllWLs(controller.getWlList());
-		verify(view).showError("Wishlist Birthday already exists");
-	}
-
-	@Test
-	void otherExceptionWhileAddingAWLAreManaged() {
-		doThrow(new RuntimeException()).when(wlDao).add(isA(Wishlist.class));
-		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		controller.addWishlist(wl);
-		assertThat(controller.getWlList()).isEmpty();
-		verify(view).showError("Error: please try again");
+		verify(view).showError("Error: please try again. Maybe you're trying to insert a Wishlist that already exists");
 	}
 
 	@Test
@@ -127,7 +117,7 @@ class WishlistControllerTest {
 	@Test
 	void correctlyAddDuplicatedItemToDifferentWishlist() {
 		Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
-		Wishlist wl2 = new Wishlist("Natale", "Gift ideas");
+		Wishlist wl2 = new Wishlist("Christmas", "Gift ideas");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		Item item_dup = new Item("Phone", "Samsung Galaxy A52", 300);
 		doNothing().when(itemDao).add(isA(Item.class));

@@ -5,14 +5,13 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.RollbackException;
-import jakarta.persistence.TransactionRequiredException;
 import model.Wishlist;
 
 public class WishlistDAO implements BaseDAO<Wishlist, String> {
@@ -26,16 +25,20 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 	}
 
 	@Override
-	public Wishlist findById(String Id) {
+	public Wishlist findById(String id) {
+		Wishlist result = null;
+		openEntityManager();
 		try {
-			// TODO
+			result = em.createQuery("SELECT wl FROM Wishlist wl WHERE wl.name = :id", Wishlist.class)
+					.setParameter("id", id)
+					.getSingleResult();
 		} catch (NoResultException e) {
-			LOGGER.info(() -> String.format("No Wishlist found with Id: %s", Id));
+			LOGGER.info(() -> String.format("No Wishlist found with Id: %s", id));
 			return null;
-		} catch (Exception e) {
-			// TODO
+		} finally {
+			closeEntityManager();
 		}
-		return null;
+		return result;
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 
 	@Override
 	public void remove(Wishlist wl) {
-		executeInsideTransaction(entitymanager -> em.remove(em.contains(wl) ? wl : entitymanager.merge(wl)));
+		executeInsideTransaction(entitymanager -> entitymanager.remove(entitymanager.merge(wl)));
 	}
 
 	@Override
@@ -58,12 +61,7 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 	}
 
 	private void closeEntityManager() {
-		try {
-			em.close();
-		} catch (RuntimeException e) {
-			LOGGER.error("Close entity manager fails");
-			throw e;
-		}
+		em.close();
 	}
 
 	private void openEntityManager() {
@@ -83,9 +81,6 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 			transaction.begin();
 			action.accept(em);
 			transaction.commit();
-		} catch (RollbackException e) {
-			transactionRollbackHandling(transaction, "Trying to insert a Wishlist instance that already exists");
-			throw e;
 		} catch (RuntimeException e) {
 			transactionRollbackHandling(transaction, "Errors executing the transaction");
 			throw e;
@@ -95,14 +90,8 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 	}
 
 	private void transactionRollbackHandling(EntityTransaction transaction, String errorString) {
-		if (transaction != null && transaction.isActive()) {
-			transaction.rollback();
-		}
+		transaction.rollback();
 		LOGGER.error(errorString);
-	}
-
-	EntityManager getEm() {
-		return em;
 	}
 
 	EntityManagerFactory getEmf() {
