@@ -24,10 +24,7 @@ class WishlistDAOTest {
 	void setup() {
 		wDao = new WishlistDAO();
 		emf = wDao.getEmf();
-		EntityManager em = wDao.getEmf().createEntityManager();
-		em.createNativeQuery("truncate table Item");
-		em.createNativeQuery("truncate table Wishlist");
-		em.close();
+		DAOTestsSQLQueries.initEmptyDB(emf);
 	}
 
 	@Test

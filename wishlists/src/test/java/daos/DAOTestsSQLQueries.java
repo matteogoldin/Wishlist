@@ -7,6 +7,13 @@ import model.Item;
 import model.Wishlist;
 
 public final class DAOTestsSQLQueries {
+
+	public static void initEmptyDB(EntityManagerFactory emf) {
+		EntityManager em = emf.createEntityManager();
+		em.createNativeQuery("truncate table Item");
+		em.createNativeQuery("truncate table Wishlist");
+		em.close();
+	}
 	
 	public static void insertWishlist(Wishlist wl, EntityManagerFactory emf) {
 		String nativeQuery = "INSERT INTO Wishlist (name, desc) VALUES (?, ?)";

@@ -14,12 +14,9 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import model.Wishlist;
 
-public class WishlistDAO implements BaseDAO<Wishlist, String> {
-	private EntityManagerFactory emf;
-	private EntityManager em;
-
-	private static final Logger LOGGER = LogManager.getLogger(WishlistDAO.class);
-
+public class WishlistDAO extends BaseDAO<Wishlist, String> {
+	private static final Logger LOGGER_WD = LogManager.getLogger(WishlistDAO.class);
+	
 	public WishlistDAO() {
 		emf = Persistence.createEntityManagerFactory("wishlists-pu-test");
 	}
@@ -33,7 +30,7 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 					.setParameter("id", id)
 					.getSingleResult();
 		} catch (NoResultException e) {
-			LOGGER.info(() -> String.format("No Wishlist found with Id: %s", id));
+			LOGGER_WD.info(() -> String.format("No Wishlist found with Id: %s", id));
 		} finally {
 			em.close();
 		}
@@ -58,39 +55,4 @@ public class WishlistDAO implements BaseDAO<Wishlist, String> {
 		em.close();
 		return result;
 	}
-
-	private void openEntityManager() {
-		try {
-			em = emf.createEntityManager();
-		} catch (RuntimeException e) {
-			LOGGER.error("Create entity manager fails");
-			throw e;
-		}
-	}
-
-	private void executeInsideTransaction(Consumer<EntityManager> action) {
-		openEntityManager();
-		EntityTransaction transaction = null;
-		try {
-			transaction = em.getTransaction();
-			transaction.begin();
-			action.accept(em);
-			transaction.commit();
-		} catch (RuntimeException e) {
-			transactionRollbackHandling(transaction, "Errors executing the transaction");
-			throw e;
-		} finally {
-			em.close();
-		}
-	}
-
-	private void transactionRollbackHandling(EntityTransaction transaction, String errorString) {
-		transaction.rollback();
-		LOGGER.error(errorString);
-	}
-
-	EntityManagerFactory getEmf() {
-		return emf;
-	}
-
 }

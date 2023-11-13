@@ -1,10 +1,57 @@
 package daos;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public interface BaseDAO<T,Q>{
-	T findById(Q id);
-	List<T> getAll();
-	void add(T object);
-	void remove(T object);
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+
+public abstract class BaseDAO<T,Q>{
+	protected EntityManager em;
+	protected EntityManagerFactory emf;
+	
+	private static final Logger LOGGER_BD = LogManager.getLogger(BaseDAO.class);
+	
+	public abstract T findById(Q id);
+	public abstract List<T> getAll();
+	public abstract void add(T object);
+	public abstract void remove(T object);
+	
+	void openEntityManager() {
+		try {
+			em = emf.createEntityManager();
+		} catch (RuntimeException e) {
+			LOGGER_BD.error("Create entity manager fails");
+			throw e;
+		}
+	}
+	
+	protected void executeInsideTransaction(Consumer<EntityManager> action) {
+		openEntityManager();
+		EntityTransaction transaction = null;
+		try {
+			transaction = em.getTransaction();
+			transaction.begin();
+			action.accept(em);
+			transaction.commit();
+		} catch (RuntimeException e) {
+			transactionRollbackHandling(transaction, "Errors executing the transaction");
+			throw e;
+		} finally {
+			em.close();
+		}
+	}
+
+	protected void transactionRollbackHandling(EntityTransaction transaction, String errorString) {
+		transaction.rollback();
+		LOGGER_BD.error(errorString);
+	}
+	
+	EntityManagerFactory getEmf() {
+		return emf;
+	}
 }

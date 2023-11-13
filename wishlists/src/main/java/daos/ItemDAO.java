@@ -1,18 +1,26 @@
 package daos;
 
+import org.apache.logging.log4j.LogManager;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Persistence;
 import model.Item;
 import model.ItemPK;
+import model.Wishlist;
 
-public class ItemDAO implements BaseDAO<Item,ItemPK> {
+public class ItemDAO extends BaseDAO<Item,ItemPK> {
+	private static final Logger LOGGER_ID = LogManager.getLogger(ItemDAO.class);
 	
-	private static final Logger LOGGER = LogManager.getLogger(ItemDAO.class);
+	public ItemDAO() {
+		emf = Persistence.createEntityManagerFactory("wishlists-pu-test");
+	}
 	
 	@Override
 	public Item findById(ItemPK id) {
@@ -22,8 +30,11 @@ public class ItemDAO implements BaseDAO<Item,ItemPK> {
 
 	@Override
 	public List<Item> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Item> result;
+		openEntityManager();
+		result = em.createQuery("SELECT it FROM Item it", Item.class).getResultList();
+		em.close();
+		return result;
 	}
 
 	@Override
@@ -31,13 +42,13 @@ public class ItemDAO implements BaseDAO<Item,ItemPK> {
 		try {
 			
 		} catch (EntityExistsException e) {
-			LOGGER.error("Trying to insert an Item instance that already exists");
+			LOGGER_ID.error("Trying to insert an Item instance that already exists");
 			throw e;
 		} catch(IllegalStateException e){
-			LOGGER.error("Trying to insert an Item instance in a Wishlist that is not persisted");
+			LOGGER_ID.error("Trying to insert an Item instance in a Wishlist that is not persisted");
 			throw e;
 		} catch (RuntimeException e) {
-			LOGGER.error("Errors executing the transaction");
+			LOGGER_ID.error("Errors executing the transaction");
 			throw e;
 		}
 	}
@@ -51,6 +62,10 @@ public class ItemDAO implements BaseDAO<Item,ItemPK> {
 	public List<Item> getAllWLItems(String wlId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	EntityManagerFactory getEmf() {
+		return emf;
 	}
 
 }
