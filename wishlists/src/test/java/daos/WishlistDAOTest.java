@@ -28,12 +28,12 @@ class WishlistDAOTest {
 	}
 
 	@Test
-	void getAllWhenDatabaseIsEmpty() {
+	void getAllWhenDatabaseIsEmptyReturnEmptyList() {
 		assertThat(wDao.getAll()).isEmpty();
 	}
 
 	@Test
-	void getAllWhenDatabaseIsNotEmpty() {
+	void getAllWhenDatabaseIsNotEmptyReturnANotEmptyList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		assertThat(wDao.getAll()).hasSize(1);
