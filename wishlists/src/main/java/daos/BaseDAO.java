@@ -1,6 +1,5 @@
 package daos;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,14 +12,9 @@ import jakarta.persistence.EntityTransaction;
 public abstract class BaseDAO<T,Q>{
 	protected EntityManager em;
 	protected EntityManagerFactory emf;
-	
+
 	private static final Logger LOGGER_BD = LogManager.getLogger(BaseDAO.class);
-	
-	public abstract T findById(Q id);
-	public abstract List<T> getAll();
-	public abstract void add(T object);
-	public abstract void remove(T object);
-	
+
 	void openEntityManager() {
 		try {
 			em = emf.createEntityManager();
@@ -29,7 +23,7 @@ public abstract class BaseDAO<T,Q>{
 			throw e;
 		}
 	}
-	
+
 	protected void executeInsideTransaction(Consumer<EntityManager> action) {
 		openEntityManager();
 		EntityTransaction transaction = null;
@@ -50,7 +44,7 @@ public abstract class BaseDAO<T,Q>{
 		transaction.rollback();
 		LOGGER_BD.error(errorString);
 	}
-	
+
 	EntityManagerFactory getEmf() {
 		return emf;
 	}

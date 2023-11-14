@@ -14,7 +14,7 @@ public class Wishlist{
 	@Id
 	private String name;
 	
-	@OneToMany(mappedBy="wishlist", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Item> items;
 	
 	private String desc;

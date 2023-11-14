@@ -1,27 +1,21 @@
 package daos;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import model.Wishlist;
 
 public class WishlistDAO extends BaseDAO<Wishlist, String> {
 	private static final Logger LOGGER_WD = LogManager.getLogger(WishlistDAO.class);
-	
+
 	public WishlistDAO() {
 		emf = Persistence.createEntityManagerFactory("wishlists-pu-test");
 	}
 
-	@Override
 	public Wishlist findById(String id) {
 		Wishlist result = null;
 		openEntityManager();
@@ -37,17 +31,14 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 		return result;
 	}
 
-	@Override
-	public void add(Wishlist wl) throws EntityExistsException, RuntimeException {
+	public void add(Wishlist wl) {
 		executeInsideTransaction(entitymanager -> entitymanager.persist(wl));
 	}
 
-	@Override
 	public void remove(Wishlist wl) {
 		executeInsideTransaction(entitymanager -> entitymanager.remove(entitymanager.merge(wl)));
 	}
 
-	@Override
 	public List<Wishlist> getAll() {
 		List<Wishlist> result;
 		openEntityManager();
@@ -55,4 +46,13 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 		em.close();
 		return result;
 	}
+
+	public void merge(Wishlist wl) {
+		if(findById(wl.getName()) == null) {
+			LOGGER_WD.error("Trying to merge a Wishlist that is not persisted");
+			throw new RuntimeException();
+		}
+		executeInsideTransaction(entitymanager -> entitymanager.merge(wl));
+	}
+
 }
