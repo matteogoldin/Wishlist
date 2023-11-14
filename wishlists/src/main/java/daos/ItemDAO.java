@@ -5,52 +5,26 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.Persistence;
 import model.Item;
 import model.ItemPK;
+import model.Wishlist;
 
-public class ItemDAO implements BaseDAO<Item,ItemPK> {
-	
-	private static final Logger LOGGER = LogManager.getLogger(ItemDAO.class);
-	
-	@Override
-	public Item findById(ItemPK id) {
-		// TODO
-		return null;
+public class ItemDAO extends BaseDAO<Item,ItemPK> {
+	private static final Logger LOGGER_ID = LogManager.getLogger(ItemDAO.class);
+
+	public ItemDAO() {
+		emf = Persistence.createEntityManagerFactory("wishlists-pu-test");
 	}
 
-	@Override
-	public List<Item> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Item> getAllWLItems(Wishlist wl) {
+		List<Item> result;
+		openEntityManager();
+		result = em.createQuery("SELECT it FROM Item it WHERE it.wishlist = :wl", Item.class)
+				.setParameter("wl", wl)
+				.getResultList();
+		LOGGER_ID.info("Items correctly retrieved");
+		em.close();
+		return result;
 	}
-
-	@Override
-	public void add(Item item) throws EntityExistsException{
-		try {
-			
-		} catch (EntityExistsException e) {
-			LOGGER.error("Trying to insert an Item instance that already exists");
-			throw e;
-		} catch(IllegalStateException e){
-			LOGGER.error("Trying to insert an Item instance in a Wishlist that is not persisted");
-			throw e;
-		} catch (RuntimeException e) {
-			LOGGER.error("Errors executing the transaction");
-			throw e;
-		}
-	}
-
-	@Override
-	public void remove(Item item) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public List<Item> getAllWLItems(String wlId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -58,4 +60,22 @@ public class Item{
 	public void setWishlist(Wishlist wishlist) {
 		this.wishlist = wishlist;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, wishlist);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		return Objects.equals(name, other.name) && Objects.equals(wishlist, other.wishlist);
+	}
+	
 }

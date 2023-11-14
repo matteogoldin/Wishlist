@@ -1,5 +1,7 @@
 package daos;
 
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -7,6 +9,13 @@ import model.Item;
 import model.Wishlist;
 
 public final class DAOTestsSQLQueries {
+
+	public static void initEmptyDB(EntityManagerFactory emf) {
+		EntityManager em = emf.createEntityManager();
+		em.createNativeQuery("truncate table Item");
+		em.createNativeQuery("truncate table Wishlist");
+		em.close();
+	}
 	
 	public static void insertWishlist(Wishlist wl, EntityManagerFactory emf) {
 		String nativeQuery = "INSERT INTO Wishlist (name, desc) VALUES (?, ?)";
@@ -61,5 +70,22 @@ public final class DAOTestsSQLQueries {
 		}
 		em.close();
 		return item_dup;
+	}
+	
+	public static List<Item> findAllItemsFromAWL(Wishlist wl, EntityManagerFactory emf) {
+		List<Item> itemList;
+		EntityManager em = emf.createEntityManager();
+		itemList = em.createQuery("SELECT it FROM Item it WHERE it.wishlist = :wl", Item.class)
+				.setParameter("wl", wl).getResultList();
+		em.close();
+		return itemList;
+	}
+
+	public static void mergeWishlist(Wishlist wl, EntityManagerFactory emf) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.merge(wl);
+		em.getTransaction().commit();
+		em.close();		
 	}
 }
