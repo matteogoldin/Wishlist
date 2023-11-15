@@ -68,6 +68,7 @@ public class WishlistController {
 	public void removeItemFromWishlist(Item item, Wishlist wl) {
 		try {
 			wl.getItems().remove(item);
+			item.setWishlist(null);
 			wlDao.merge(wl);
 			LOGGER.info(() -> String.format("Item %s correctly removed from Wishlist %s", item.getName(), wl.getName()));
 		} catch (RuntimeException e) {

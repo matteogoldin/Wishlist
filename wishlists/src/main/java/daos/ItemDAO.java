@@ -13,8 +13,8 @@ import model.Wishlist;
 public class ItemDAO extends BaseDAO<Item,ItemPK> {
 	private static final Logger LOGGER_ID = LogManager.getLogger(ItemDAO.class);
 
-	public ItemDAO() {
-		emf = Persistence.createEntityManagerFactory("wishlists-pu-test");
+	public ItemDAO(String persistentUnit) {
+		emf = Persistence.createEntityManagerFactory(persistentUnit);
 	}
 
 	public List<Item> getAllWLItems(Wishlist wl) {

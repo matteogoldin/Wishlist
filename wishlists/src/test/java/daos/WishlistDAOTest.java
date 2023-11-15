@@ -21,7 +21,7 @@ class WishlistDAOTest {
 
 	@BeforeEach
 	void setup() {
-		wDao = new WishlistDAO();
+		wDao = new WishlistDAO("wishlists-pu-test");
 		emf = wDao.getEmf();
 		DAOTestsSQLQueries.initEmptyDB(emf);
 	}
@@ -140,6 +140,7 @@ class WishlistDAOTest {
 		wDao.merge(wl);
 		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNotNull();
 		wl.getItems().remove(item);
+		item.setWishlist(null);
 		wDao.merge(wl);
 		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNull();
 	}

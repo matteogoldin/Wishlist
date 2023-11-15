@@ -18,7 +18,7 @@ class ItemDAOTest {
 	
 	@BeforeEach
 	void setup() {
-		itDao = new ItemDAO();
+		itDao = new ItemDAO("wishlists-pu-test");
 		emf = itDao.getEmf();
 		DAOTestsSQLQueries.initEmptyDB(emf);
 	}
@@ -45,5 +45,4 @@ class ItemDAOTest {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		assertThat(itDao.getAllWLItems(wl)).isEmpty();
 	}
-	
 }

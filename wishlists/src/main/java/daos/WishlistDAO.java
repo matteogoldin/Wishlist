@@ -12,8 +12,8 @@ import model.Wishlist;
 public class WishlistDAO extends BaseDAO<Wishlist, String> {
 	private static final Logger LOGGER_WD = LogManager.getLogger(WishlistDAO.class);
 
-	public WishlistDAO() {
-		emf = Persistence.createEntityManagerFactory("wishlists-pu-test");
+	public WishlistDAO(String persistentUnit) {
+		emf = Persistence.createEntityManagerFactory(persistentUnit);
 	}
 
 	public Wishlist findById(String id) {
