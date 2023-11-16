@@ -26,8 +26,10 @@ import view.WishlistView;
 
 @Testcontainers
 class WishlistControllerIT {
+
 	@Container
-	private MySQLContainer<?> mysqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33")).withLogConsumer(new Slf4jLogConsumer(logger));
+	private MySQLContainer<?> mysqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33"))
+			.withLogConsumer(new Slf4jLogConsumer(logger));
 
 	@Mock
 	private WishlistView view;
@@ -46,12 +48,13 @@ class WishlistControllerIT {
 		closeable = MockitoAnnotations.openMocks(this);
 		wlDao = new WishlistDAO("wishlists-pu");
 		itemDao = new ItemDAO("wishlists-pu");
-		for(Wishlist wl : wlDao.getAll()) wlDao.remove(wl);
 		controller = new WishlistController(view, wlDao, itemDao);
 	}
 
 	@AfterEach
 	public void releaseMocks() throws Exception {
+		for (Wishlist wl : wlDao.getAll())
+			wlDao.remove(wl);
 		closeable.close();
 	}
 
