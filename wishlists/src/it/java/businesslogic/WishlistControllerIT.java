@@ -29,7 +29,10 @@ class WishlistControllerIT {
 
 	@Container
 	private MySQLContainer<?> mysqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33"))
-			.withLogConsumer(new Slf4jLogConsumer(logger));
+			.withLogConsumer(new Slf4jLogConsumer(logger))
+			.withDatabaseName("wishlists-schema")
+			.withUsername("java-client")
+			.withPassword("password");
 
 	@Mock
 	private WishlistView view;
@@ -53,8 +56,6 @@ class WishlistControllerIT {
 
 	@AfterEach
 	public void releaseMocks() throws Exception {
-		for (Wishlist wl : wlDao.getAll())
-			wlDao.remove(wl);
 		closeable.close();
 	}
 

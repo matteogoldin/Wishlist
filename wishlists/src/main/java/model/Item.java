@@ -21,8 +21,7 @@ public class Item{
 	private float price;
 	
 	public Item() {}
-	
-	//TODO: check if this constructor create problems in ORM
+
 	public Item(String name, String desc, float price) {
 		this.name = name;
 		this.desc = desc;
