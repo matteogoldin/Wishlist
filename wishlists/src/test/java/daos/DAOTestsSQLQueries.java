@@ -43,28 +43,15 @@ public final class DAOTestsSQLQueries {
 		return wl_dup;
 	}
 	
-	public static void insertItem(Item item, EntityManagerFactory emf) {
-		String nativeQuery = "INSERT INTO Item (name, desc, price, wishlist_name) VALUES (?, ?, ?, ?)";
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		em.createNativeQuery(nativeQuery)
-			.setParameter(1, item.getName())
-			.setParameter(2, item.getDesc())
-			.setParameter(3, item.getPrice())
-			.setParameter(4, item.getWishlist().getName())
-			.executeUpdate();
-		em.getTransaction().commit();
-		em.close();
-	}
 	
-	public static Item findItem(Item item, EntityManagerFactory emf) {
+	public static Item findItem(Wishlist wl, Item item, EntityManagerFactory emf) {
 		EntityManager em = emf.createEntityManager();
 		Item item_dup = null;
 		try {
-			item_dup = em.createQuery(
-					"SELECT it FROM Item it WHERE it.name = :name", Item.class)
-				.setParameter("name", item.getName())
-				.getSingleResult();
+			item_dup = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name AND it.name = :it_name", Item.class)
+					.setParameter("wl_name", wl.getName())
+					.setParameter("it_name", item.getName())
+					.getSingleResult();
 		} catch (NoResultException e) {
 			item_dup = null;
 		}
@@ -75,8 +62,9 @@ public final class DAOTestsSQLQueries {
 	public static List<Item> findAllItemsFromAWL(Wishlist wl, EntityManagerFactory emf) {
 		List<Item> itemList;
 		EntityManager em = emf.createEntityManager();
-		itemList = em.createQuery("SELECT it FROM Item it WHERE it.wishlist = :wl", Item.class)
-				.setParameter("wl", wl).getResultList();
+		itemList = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name", Item.class)
+				.setParameter("wl_name", wl.getName())
+				.getResultList();
 		em.close();
 		return itemList;
 	}

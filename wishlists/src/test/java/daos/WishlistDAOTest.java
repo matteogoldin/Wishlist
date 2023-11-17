@@ -81,11 +81,10 @@ class WishlistDAOTest {
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
-		item.setWishlist(wl);
-		DAOTestsSQLQueries.insertItem(item, emf);
-		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNotNull();
+		DAOTestsSQLQueries.mergeWishlist(wl, emf);
+		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNotNull();
 		wDao.remove(wl);
-		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNull();
+		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
 	}
 
 	@Test
@@ -124,10 +123,9 @@ class WishlistDAOTest {
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		wl.getItems().add(item);
-		item.setWishlist(wl);
-		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNull();
+		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
 		wDao.merge(wl);
-		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNotNull();
+		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isEqualTo(item);
 	}
 
 	@Test
@@ -136,13 +134,11 @@ class WishlistDAOTest {
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
-		item.setWishlist(wl);
 		wDao.merge(wl);
-		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNotNull();
+		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNotNull();
 		wl.getItems().remove(item);
-		item.setWishlist(null);
 		wDao.merge(wl);
-		assertThat(DAOTestsSQLQueries.findItem(item, emf)).isNull();
+		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
 	}
 
 	@Test
@@ -153,39 +149,21 @@ class WishlistDAOTest {
 	}
 
 	@Test
-	void addTwoItemToTheSameWLRaiseAnException() {
+	void getAllWlItemsReturnsAllTheItemsAssociatedToAList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		Item item1 = new Item("Phone", "Samsung Galaxy A52", 300);
+		Item item2 = new Item("Wallet", "D&G", 100);
 		wl.getItems().add(item1);
-		item1.setWishlist(wl);
-		wDao.merge(wl);
-		assertThat(DAOTestsSQLQueries.findItem(item1, emf)).isNotNull();
-		Item item2 = new Item("Phone", "Iphone 11", 700);
 		wl.getItems().add(item2);
-		item2.setWishlist(wl);
-		assertAll(
-				() -> assertThatThrownBy(() -> wDao.merge(wl)).isInstanceOf(RuntimeException.class),
-				() -> assertThat(DAOTestsSQLQueries.findAllItemsFromAWL(wl, emf)).containsOnly(item1));
+		DAOTestsSQLQueries.mergeWishlist(wl, emf);
+		List<Item> itList = wDao.getAllWlItems(wl);
+		assertThat(itList).containsExactly(item1, item2);
 	}
-
+	
 	@Test
-	void addTwoItemToDifferentWLDoesntRaiseAnException() {
-		Wishlist wl1 = new Wishlist("Christmas", "Christmas gifts");
-		DAOTestsSQLQueries.insertWishlist(wl1, emf);
-		Wishlist wl2 = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl2, emf);
-		Item item1 = new Item("Phone", "Samsung Galaxy A52", 300);
-		wl1.getItems().add(item1);
-		item1.setWishlist(wl1);
-		wDao.merge(wl1);
-		Item item2 = new Item("Phone", "Iphone 11", 700);
-		wl2.getItems().add(item2);
-		item2.setWishlist(wl2);
-		wDao.merge(wl2);
-		assertAll(
-				() -> assertThat(DAOTestsSQLQueries.findAllItemsFromAWL(wl1, emf)).containsOnly(item1),
-				() -> assertThat(DAOTestsSQLQueries.findAllItemsFromAWL(wl2, emf)).containsOnly(item2));
+	void getAllWlItemsOnANonPersistedWLReturnsAnEmptyList() {
+		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+		assertThat(wDao.getAllWlItems(wl)).isEmpty();
 	}
-
 }

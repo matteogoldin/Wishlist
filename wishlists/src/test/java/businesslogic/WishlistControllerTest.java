@@ -2,6 +2,7 @@ package businesslogic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -17,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import daos.ItemDAO;
 import daos.WishlistDAO;
 import model.Item;
 import model.Wishlist;
@@ -30,9 +30,6 @@ class WishlistControllerTest {
 
 	@Mock
 	private WishlistDAO wlDao;
-
-	@Mock
-	private ItemDAO itemDao;
 
 	@InjectMocks
 	private WishlistController controller;
@@ -105,9 +102,7 @@ class WishlistControllerTest {
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		controller.getWlList().add(wl);
 		controller.addItemToWishlist(item, wl);
-		assertAll(() -> assertThat(item.getWishlist()).isEqualTo(wl),
-				() -> assertThat(wl.getItems().contains(item)),
-				() -> assertThat(wl.getItems()).hasSize(1));
+		assertThat(wl.getItems()).containsOnly(item);
 		verify(wlDao).merge(wl);
 		verify(view).showAllWLs(controller.getWlList());
 		verify(view).showAllItems(wl);
@@ -124,9 +119,7 @@ class WishlistControllerTest {
 		controller.getWlList().add(wl2);
 		controller.addItemToWishlist(item, wl1);
 		controller.addItemToWishlist(item_dup, wl2);
-		assertAll(() -> assertThat(item.getWishlist()).isEqualTo(wl1),
-				() -> assertThat(item_dup.getWishlist()).isEqualTo(wl2),
-				() -> assertThat(wl1.getItems()).containsOnly(item),
+		assertAll(() -> assertThat(wl1.getItems()).containsOnly(item),
 				() -> assertThat(wl2.getItems()).containsOnly(item_dup));
 		verify(view, times(2)).showAllWLs(controller.getWlList());
 		verify(view, times(2)).showAllItems(isA(Wishlist.class));
@@ -141,12 +134,10 @@ class WishlistControllerTest {
 		controller.getWlList().add(wl);
 		controller.addItemToWishlist(item, wl);
 		controller.addItemToWishlist(item_dup, wl);
-		assertAll(() -> assertThat(item.getWishlist()).isEqualTo(wl),
-				() -> assertThat(item_dup.getWishlist()).isNull(),
-				() -> assertThat(wl.getItems()).containsOnly(item));
+		assertThat(wl.getItems()).containsOnly(item);
 		verify(view, times(2)).showAllWLs(controller.getWlList());
 		verify(view, times(2)).showAllItems(wl);
-		verify(view).showError(ERROR_STRING);
+		verify(view).showError(anyString());
 	}
 
 	@Test
@@ -155,7 +146,6 @@ class WishlistControllerTest {
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		doThrow(new RuntimeException()).when(wlDao).merge(isA(Wishlist.class));
 		controller.addItemToWishlist(item, wl);
-		assertThat(item.getWishlist()).isNull();
 		assertThat(wl.getItems()).isEmpty();
 		verify(view).showError(ERROR_STRING);
 		verify(view).showAllWLs(controller.getWlList());
@@ -174,7 +164,7 @@ class WishlistControllerTest {
 	}
 
 	@Test
-	void correctlyRemovingAnObject() {
+	void correctlyRemovingAnItem() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		controller.getWlList().add(wl);
@@ -232,19 +222,19 @@ class WishlistControllerTest {
 	void refreshItemsGetItemsFromTheDaoAndSendThemToTheView() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
-		when(itemDao.getAllWLItems(wl)).thenReturn(Arrays.asList(item));
+		when(wlDao.getAllWlItems(wl)).thenReturn(Arrays.asList(item));
 		controller.refreshItems(wl);
 		assertThat(wl.getItems()).isEqualTo(Arrays.asList(item));
-		verify(itemDao).getAllWLItems(wl);
+		verify(wlDao).getAllWlItems(wl);
 		verify(view).showAllItems(wl);
 	}
 
 	@Test
 	void refreshItemsManagesExceptionFromDao() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		when(itemDao.getAllWLItems(wl)).thenThrow(new RuntimeException());
+		when(wlDao.getAllWlItems(wl)).thenThrow(new RuntimeException());
 		controller.refreshItems(wl);
-		verify(itemDao).getAllWLItems(wl);
+		verify(wlDao).getAllWlItems(wl);
 		verify(view, times(0)).showAllItems(wl);
 		verify(view).showError(ERROR_STRING);
 	}

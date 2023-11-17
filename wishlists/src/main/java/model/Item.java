@@ -2,21 +2,11 @@ package model;
 
 import java.util.Objects;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
 
-@Entity
-@IdClass(ItemPK.class)
+@Embeddable
 public class Item{
-	@Id
 	private String name;
-	
-	@Id
-	@ManyToOne
-	private Wishlist wishlist;
-	
 	private String desc;
 	private float price;
 	
@@ -52,17 +42,9 @@ public class Item{
 		this.price = price;
 	}
 
-	public Wishlist getWishlist() {
-		return wishlist;
-	}
-
-	public void setWishlist(Wishlist wishlist) {
-		this.wishlist = wishlist;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, wishlist);
+		return Objects.hash(desc, name, price);
 	}
 
 	@Override
@@ -74,7 +56,8 @@ public class Item{
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(name, other.name) && Objects.equals(wishlist, other.wishlist);
+		return Objects.equals(desc, other.desc) && Objects.equals(name, other.name)
+				&& Float.floatToIntBits(price) == Float.floatToIntBits(other.price);
 	}
-	
+
 }

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
+import model.Item;
 import model.Wishlist;
 
 public class WishlistDAO extends BaseDAO<Wishlist, String> {
@@ -53,6 +54,16 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 			throw new RuntimeException();
 		}
 		executeInsideTransaction(entitymanager -> entitymanager.merge(wl));
+	}
+	
+	public List<Item> getAllWlItems(Wishlist wl) {
+		List<Item> result;
+		openEntityManager();
+		result = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name", Item.class)
+				.setParameter("wl_name", wl.getName())
+				.getResultList();
+		em.close();
+		return result;
 	}
 
 }

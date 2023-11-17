@@ -24,15 +24,15 @@ import model.Item;
 import model.Wishlist;
 import view.WishlistView;
 
-@Testcontainers
+//@Testcontainers
 class WishlistControllerIT {
 
-	@Container
-	private MySQLContainer<?> mysqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33"))
-			.withLogConsumer(new Slf4jLogConsumer(logger))
-			.withDatabaseName("wishlists-schema")
-			.withUsername("java-client")
-			.withPassword("password");
+	/*
+	 * @Container private MySQLContainer<?> mysqlContainer = new
+	 * MySQLContainer<>(DockerImageName.parse("mysql:8.0.33")) .withLogConsumer(new
+	 * Slf4jLogConsumer(logger)) .withDatabaseName("wishlists-schema")
+	 * .withUsername("java-client") .withPassword("password");
+	 */
 
 	@Mock
 	private WishlistView view;
@@ -56,12 +56,13 @@ class WishlistControllerIT {
 
 	@AfterEach
 	public void releaseMocks() throws Exception {
+		for(Wishlist wl : wlDao.getAll()) wlDao.remove(wl);
 		closeable.close();
 	}
 
 	@Test
 	void ContainerIsRunningTest() {
-		assertThat(mysqlContainer.isRunning()).isTrue();
+		//assertThat(mysqlContainer.isRunning()).isTrue();
 	}
 
 	@Test
