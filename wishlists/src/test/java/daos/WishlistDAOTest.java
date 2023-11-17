@@ -94,10 +94,8 @@ class WishlistDAOTest {
 		DAOTestsSQLQueries.insertWishlist(wl1, emf);
 		DAOTestsSQLQueries.insertWishlist(wl2, emf);
 		List<Wishlist> wlList = wDao.getAll();
-		assertAll(
-			() -> assertThat(wlList).hasSize(2),
-			() -> assertThat(wlList).contains(wl1),
-			() -> assertThat(wlList).contains(wl2));
+		assertAll(() -> assertThat(wlList).hasSize(2), () -> assertThat(wlList).contains(wl1),
+				() -> assertThat(wlList).contains(wl2));
 	}
 
 	@Test
@@ -118,34 +116,25 @@ class WishlistDAOTest {
 	}
 
 	@Test
-	void mergeUpdateItemsListWhenAnItemIsAdded() {
+	void addItemAddAnItemToAWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
-		wl.getItems().add(item);
 		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
-		wDao.merge(wl);
+		wDao.addItem(wl, item);
 		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isEqualTo(item);
 	}
 
 	@Test
-	void mergeUpdateItemsListWhenAnItemIsRemoved() {
+	void removeItemRemovesItemFromTheWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
-		wDao.merge(wl);
+		DAOTestsSQLQueries.insertItem(wl, item, emf);
 		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNotNull();
-		wl.getItems().remove(item);
-		wDao.merge(wl);
+		wDao.removeItem(wl, item);
 		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
-	}
-
-	@Test
-	void mergeOnAWLNotPersisted() {
-		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		assertThatThrownBy(() -> wDao.merge(wl)).isInstanceOf(RuntimeException.class);
-		assertThat(DAOTestsSQLQueries.findWishlist(wl, emf)).isNull();
 	}
 
 	@Test
@@ -154,13 +143,12 @@ class WishlistDAOTest {
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
 		Item item1 = new Item("Phone", "Samsung Galaxy A52", 300);
 		Item item2 = new Item("Wallet", "D&G", 100);
-		wl.getItems().add(item1);
-		wl.getItems().add(item2);
-		DAOTestsSQLQueries.mergeWishlist(wl, emf);
+		DAOTestsSQLQueries.insertItem(wl, item1, emf);
+		DAOTestsSQLQueries.insertItem(wl, item2, emf);
 		List<Item> itList = wDao.getAllWlItems(wl);
 		assertThat(itList).containsExactly(item1, item2);
 	}
-	
+
 	@Test
 	void getAllWlItemsOnANonPersistedWLReturnsAnEmptyList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");

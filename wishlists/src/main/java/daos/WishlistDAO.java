@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import model.Item;
@@ -47,14 +48,6 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 		em.close();
 		return result;
 	}
-
-	public void merge(Wishlist wl) {
-		if(findById(wl.getName()) == null) {
-			LOGGER_WD.error("Trying to merge a Wishlist that is not persisted");
-			throw new RuntimeException();
-		}
-		executeInsideTransaction(entitymanager -> entitymanager.merge(wl));
-	}
 	
 	public List<Item> getAllWlItems(Wishlist wl) {
 		List<Item> result;
@@ -64,6 +57,38 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 				.getResultList();
 		em.close();
 		return result;
+	}
+
+	public void addItem(Wishlist wl, Item item) {
+		Wishlist wlPersisted;
+		EntityTransaction transaction = null;
+		try {
+			openEntityManager();
+			transaction = em.getTransaction();
+			transaction.begin();
+			wlPersisted = em.find(Wishlist.class, wl.getName());
+			wlPersisted.getItems().add(item);
+			transaction.commit();
+			em.close();
+		} catch (RuntimeException e) {
+			transactionRollbackHandling(transaction, "Errors executing the transaction");
+		}
+	}
+
+	public void removeItem(Wishlist wl, Item item) {
+		Wishlist wlPersisted;
+		EntityTransaction transaction = null;
+		try {
+			openEntityManager();
+			transaction = em.getTransaction();
+			transaction.begin();
+			wlPersisted = em.find(Wishlist.class, wl.getName());
+			wlPersisted.getItems().remove(item);
+			transaction.commit();
+			em.close();
+		} catch (RuntimeException e) {
+			transactionRollbackHandling(transaction, "Errors executing the transaction");
+		}
 	}
 
 }

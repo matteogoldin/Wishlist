@@ -21,13 +21,13 @@ public class Wishlist{
 	        joinColumns= @JoinColumn(name="wishlist_name"))
 	private List<Item> items;
 	
-	private String desc;
+	private String description;
 	
 	public Wishlist() {	}
 
 	public Wishlist(String name, String desc) {
 		this.name = name;
-		this.desc = desc;
+		this.description = desc;
 		items = new ArrayList<>();
 	}
 
@@ -40,11 +40,11 @@ public class Wishlist{
 	}
 
 	public String getDesc() {
-		return desc;
+		return description;
 	}
 
 	public void setDesc(String desc) {
-		this.desc = desc;
+		this.description = desc;
 	}
 
 	public List<Item> getItems() {

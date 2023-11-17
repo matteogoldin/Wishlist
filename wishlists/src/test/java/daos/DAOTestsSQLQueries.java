@@ -18,7 +18,7 @@ public final class DAOTestsSQLQueries {
 	}
 	
 	public static void insertWishlist(Wishlist wl, EntityManagerFactory emf) {
-		String nativeQuery = "INSERT INTO Wishlist (name, desc) VALUES (?, ?)";
+		String nativeQuery = "INSERT INTO Wishlist (name, description) VALUES (?, ?)";
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.createNativeQuery(nativeQuery)
@@ -57,6 +57,20 @@ public final class DAOTestsSQLQueries {
 		}
 		em.close();
 		return item_dup;
+	}
+	
+	public static void insertItem(Wishlist wl, Item item, EntityManagerFactory emf) {
+		String nativeQuery = "INSERT INTO item (name, description, price, wishlist_name) VALUES (?, ?, ?, ?)";
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.createNativeQuery(nativeQuery)
+			.setParameter(1, item.getName())
+			.setParameter(2, item.getDesc())
+			.setParameter(3, item.getPrice())
+			.setParameter(4, wl.getName())
+			.executeUpdate();
+		em.getTransaction().commit();
+		em.close();
 	}
 	
 	public static List<Item> findAllItemsFromAWL(Wishlist wl, EntityManagerFactory emf) {

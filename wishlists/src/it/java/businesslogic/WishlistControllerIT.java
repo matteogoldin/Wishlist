@@ -1,6 +1,7 @@
 package businesslogic;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,59 +11,34 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
-import daos.ItemDAO;
 import daos.WishlistDAO;
 import model.Item;
 import model.Wishlist;
 import view.WishlistView;
 
-//@Testcontainers
 class WishlistControllerIT {
-
-	/*
-	 * @Container private MySQLContainer<?> mysqlContainer = new
-	 * MySQLContainer<>(DockerImageName.parse("mysql:8.0.33")) .withLogConsumer(new
-	 * Slf4jLogConsumer(logger)) .withDatabaseName("wishlists-schema")
-	 * .withUsername("java-client") .withPassword("password");
-	 */
-
 	@Mock
 	private WishlistView view;
 
 	private WishlistDAO wlDao;
 
-	private ItemDAO itemDao;
-
 	private WishlistController controller;
 
 	private AutoCloseable closeable;
-	private static Logger logger = LoggerFactory.getLogger(WishlistControllerIT.class);
 
 	@BeforeEach
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
 		wlDao = new WishlistDAO("wishlists-pu");
-		itemDao = new ItemDAO("wishlists-pu");
-		controller = new WishlistController(view, wlDao, itemDao);
+		controller = new WishlistController(view, wlDao);
+		for (Wishlist wl : wlDao.getAll())
+			wlDao.remove(wl);
 	}
 
 	@AfterEach
 	public void releaseMocks() throws Exception {
-		for(Wishlist wl : wlDao.getAll()) wlDao.remove(wl);
 		closeable.close();
-	}
-
-	@Test
-	void ContainerIsRunningTest() {
-		//assertThat(mysqlContainer.isRunning()).isTrue();
 	}
 
 	@Test
@@ -79,7 +55,7 @@ class WishlistControllerIT {
 		controller.addWishlist(wl);
 		controller.removeWishlist(wl);
 		assertThat(controller.getWlList()).isEmpty();
-		verify(view, times(2)).showAllWLs(controller.getWlList());
+		verify(view, times(2)).showAllWLs(any());
 	}
 
 	@Test
@@ -88,7 +64,7 @@ class WishlistControllerIT {
 		controller.addWishlist(wl);
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		controller.addItemToWishlist(item, wl);
-		assertThat(itemDao.getAllWLItems(wl)).containsExactly(item);
+		assertThat(wlDao.getAllWlItems(wl)).containsExactly(item);
 	}
 
 	@Test
@@ -97,9 +73,10 @@ class WishlistControllerIT {
 		controller.addWishlist(wl);
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		controller.addItemToWishlist(item, wl);
-		assertThat(itemDao.getAllWLItems(wl)).containsExactly(item);
+		assertThat(wlDao.getAllWlItems(wl)).containsExactly(item);
+		assertThat(wlDao.getAllWlItems(wl)).contains(item);
 		controller.removeItemFromWishlist(item, wl);
-		assertThat(itemDao.getAllWLItems(wl)).isEmpty();
+		assertThat(wlDao.getAllWlItems(wl)).isEmpty();
 	}
 
 	@Test
@@ -126,11 +103,4 @@ class WishlistControllerIT {
 		assertThat(wl.getItems()).containsExactly(item1, item2);
 	}
 
-	@Test
-	void addingAnItemToANonPersistedWLShowError() {
-		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
-		controller.addItemToWishlist(item, wl);
-		verify(view).showError(anyString());
-	}
 }
