@@ -72,6 +72,7 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 			em.close();
 		} catch (RuntimeException e) {
 			transactionRollbackHandling(transaction, "Errors executing the transaction");
+			throw e;
 		}
 	}
 
@@ -88,6 +89,7 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 			em.close();
 		} catch (RuntimeException e) {
 			transactionRollbackHandling(transaction, "Errors executing the transaction");
+			throw e;
 		}
 	}
 
