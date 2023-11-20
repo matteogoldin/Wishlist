@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import daos.ItemDAO;
 import daos.WishlistDAO;
 import model.Item;
 import model.Wishlist;
@@ -15,23 +14,21 @@ import view.WishlistView;
 public class WishlistController {
 	private WishlistView view;
 	private WishlistDAO wlDao;
-	private ItemDAO itemDao;
 	private List<Wishlist> wlList;
 
 	private static final Logger LOGGER = LogManager.getLogger(WishlistController.class);
 	private static final String ERROR_STRING = "Error: please try again or try to refresh";
 
-	public WishlistController(WishlistView view, WishlistDAO wlDao, ItemDAO itemDao) {
+	public WishlistController(WishlistView view, WishlistDAO wlDao) {
 		this.view = view;
 		this.wlDao = wlDao;
-		this.itemDao = itemDao;
 		wlList = new ArrayList<>();
 	}
 
 	public void addWishlist(Wishlist wl) {
 		try {
 			wlDao.add(wl);
-			wlList.add(wl);
+			wlList = wlDao.getAll();
 			LOGGER.info(() -> String.format("Wishlist %s correctly inserted", wl.getName()));
 		} catch (RuntimeException e) {
 			view.showError(ERROR_STRING);
@@ -42,7 +39,7 @@ public class WishlistController {
 	public void removeWishlist(Wishlist wl) {
 		try {
 			wlDao.remove(wl);
-			wlList.remove(wl);
+			wlList = wlDao.getAll();
 			LOGGER.info(() -> String.format("Wishlist %s correctly removed", wl.getName()));
 		} catch (RuntimeException e) {
 			view.showError(ERROR_STRING);
@@ -51,15 +48,16 @@ public class WishlistController {
 	}
 
 	public void addItemToWishlist(Item item, Wishlist wl) {
-		item.setWishlist(wl);
-		try {
-			wl.getItems().add(item);
-			wlDao.merge(wl);
-			LOGGER.info(() -> String.format("Item %s correctly added to Wishlist %s", item.getName(), wl.getName()));
-		} catch (RuntimeException e) {
-			item.setWishlist(null);
-			wl.getItems().remove(item);
-			view.showError(ERROR_STRING);
+		if(!wl.getItems().contains(item)) {
+			try {
+				wlDao.addItem(wl, item);
+				wl.setItems(wlDao.getAllWlItems(wl));
+				LOGGER.info(() -> String.format("Item %s correctly added to Wishlist %s", item.getName(), wl.getName()));
+			} catch (RuntimeException e) {
+				view.showError(ERROR_STRING);
+			}
+		} else {
+			view.showError(String.format("Item %s is already in Wishlist %s", item.getName(), wl.getName()));
 		}
 		view.showAllWLs(wlList);
 		view.showAllItems(wl);
@@ -67,11 +65,10 @@ public class WishlistController {
 
 	public void removeItemFromWishlist(Item item, Wishlist wl) {
 		try {
-			wl.getItems().remove(item);
-			wlDao.merge(wl);
+			wlDao.removeItem(wl, item);
+			wl.setItems(wlDao.getAllWlItems(wl));
 			LOGGER.info(() -> String.format("Item %s correctly removed from Wishlist %s", item.getName(), wl.getName()));
 		} catch (RuntimeException e) {
-			wl.getItems().add(item);
 			view.showError(ERROR_STRING);
 		}
 		view.showAllWLs(wlList);
@@ -89,7 +86,7 @@ public class WishlistController {
 
 	public void refreshItems(Wishlist wl) {
 		try {
-			wl.setItems(itemDao.getAllWLItems(wl));
+			wl.setItems(wlDao.getAllWlItems(wl));
 			view.showAllItems(wl);
 		} catch (RuntimeException e) {
 			view.showError(ERROR_STRING);

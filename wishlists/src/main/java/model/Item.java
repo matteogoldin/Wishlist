@@ -2,30 +2,19 @@ package model;
 
 import java.util.Objects;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
 
-@Entity
-@IdClass(ItemPK.class)
+@Embeddable
 public class Item{
-	@Id
 	private String name;
-	
-	@Id
-	@ManyToOne
-	private Wishlist wishlist;
-	
-	private String desc;
+	private String description;
 	private float price;
 	
 	public Item() {}
-	
-	//TODO: check if this constructor create problems in ORM
+
 	public Item(String name, String desc, float price) {
 		this.name = name;
-		this.desc = desc;
+		this.description = desc;
 		this.price = price;
 	}
 
@@ -38,11 +27,11 @@ public class Item{
 	}
 
 	public String getDesc() {
-		return desc;
+		return description;
 	}
 
 	public void setDesc(String desc) {
-		this.desc = desc;
+		this.description = desc;
 	}
 
 	public float getPrice() {
@@ -53,17 +42,9 @@ public class Item{
 		this.price = price;
 	}
 
-	public Wishlist getWishlist() {
-		return wishlist;
-	}
-
-	public void setWishlist(Wishlist wishlist) {
-		this.wishlist = wishlist;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, wishlist);
+		return Objects.hash(description, name, price);
 	}
 
 	@Override
@@ -75,7 +56,8 @@ public class Item{
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return Objects.equals(name, other.name) && Objects.equals(wishlist, other.wishlist);
+		return Objects.equals(description, other.description) && Objects.equals(name, other.name)
+				&& Float.floatToIntBits(price) == Float.floatToIntBits(other.price);
 	}
-	
+
 }

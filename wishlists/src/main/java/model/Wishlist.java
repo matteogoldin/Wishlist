@@ -4,26 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Wishlist{
 	@Id
 	private String name;
 	
-	@OneToMany(mappedBy="wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ElementCollection
+	@CollectionTable(
+	        name="item",
+	        joinColumns= @JoinColumn(name="wishlist_name"))
 	private List<Item> items;
 	
-	private String desc;
+	private String description;
 	
 	public Wishlist() {	}
 
 	public Wishlist(String name, String desc) {
 		this.name = name;
-		this.desc = desc;
+		this.description = desc;
 		items = new ArrayList<>();
 	}
 
@@ -36,11 +40,11 @@ public class Wishlist{
 	}
 
 	public String getDesc() {
-		return desc;
+		return description;
 	}
 
 	public void setDesc(String desc) {
-		this.desc = desc;
+		this.description = desc;
 	}
 
 	public List<Item> getItems() {
