@@ -48,4 +48,8 @@ public abstract class BaseDAO<T,Q>{
 	EntityManagerFactory getEmf() {
 		return emf;
 	}
+
+	void setEmf(EntityManagerFactory emf) {
+		this.emf = emf;
+	}
 }

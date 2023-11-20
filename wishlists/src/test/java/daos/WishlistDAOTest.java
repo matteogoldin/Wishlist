@@ -126,6 +126,14 @@ class WishlistDAOTest {
 	}
 
 	@Test
+	void addItemCanRaiseException() {
+		Wishlist wl = null;
+		Item item = null;
+		wDao.setEmf(null);
+		assertThatThrownBy(() -> wDao.addItem(wl, item)).isInstanceOf(RuntimeException.class);
+	}
+
+	@Test
 	void removeItemRemovesItemFromTheWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		DAOTestsSQLQueries.insertWishlist(wl, emf);
@@ -135,6 +143,14 @@ class WishlistDAOTest {
 		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNotNull();
 		wDao.removeItem(wl, item);
 		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
+	}
+	
+	@Test
+	void removeItemCanRaiseException() {
+		Wishlist wl = null;
+		Item item = null;
+		wDao.setEmf(null);
+		assertThatThrownBy(() -> wDao.removeItem(wl, item)).isInstanceOf(RuntimeException.class);
 	}
 
 	@Test
