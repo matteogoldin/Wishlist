@@ -135,8 +135,8 @@
 							<param>daos.*</param>
 						</targetClasses>
 						<targetTests>
-							<param>businesslogic.*</param>
-							<param>daos.*</param>
+							<param>businesslogic.*Test*</param>
+							<param>daos.*Test*</param>
 						</targetTests>
 						<mutators>
 							<mutator>DEFAULTS</mutator>
@@ -256,6 +256,11 @@
 									<MYSQL_USER>java-client</MYSQL_USER>
 									<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
 								</env>
+								<volumes>
+									<bind>
+										<volume>mysql:/var/lib/mysql</volume>
+									</bind>
+								</volumes>
 								<ports>
 									<port>3308:3306</port>
 								</ports>
