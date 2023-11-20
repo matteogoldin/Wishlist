@@ -238,6 +238,47 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.43.4</version>
+					<configuration>
+					<showLogs>true</showLogs>
+					<verbose>build</verbose>
+					<images>
+						<image>
+							<alias>database</alias>
+							<name>mysql:8.0.33</name>
+							<run>
+								<wait>
+									<log>mysqld: ready for connections</log>
+									<time>30000</time>
+								</wait>
+								<env>
+									<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
+									<MYSQL_DATABASE>wishlists-schema</MYSQL_DATABASE>
+									<MYSQL_USER>java-client</MYSQL_USER>
+									<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
+								</env>
+								<ports>
+									<port>3308:3306</port>
+								</ports>
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>docker:start</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>docker:stop</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -266,6 +307,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
@@ -319,58 +364,6 @@
 								<phase>verify</phase>
 								<goals>
 									<goal>report</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>docker</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>io.fabric8</groupId>
-						<artifactId>docker-maven-plugin</artifactId>
-						<configuration>
-							<showLogs>true</showLogs>
-							<verbose>build</verbose>
-							<images>
-								<image>
-									<alias>database</alias>
-									<name>mysql:8.0.33</name>
-									<run>
-										<wait>
-											<log>mysqld: ready for connections</log>
-											<time>30000</time>
-										</wait>
-										<env>
-											<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
-											<MYSQL_DATABASE>wishlists-schema</MYSQL_DATABASE>
-											<MYSQL_USER>java-client</MYSQL_USER>
-											<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
-										</env>
-										<ports>
-											<port>3308:3306</port>
-										</ports>
-									</run>
-								</image>
-							</images>
-						</configuration>
-						<executions>
-							<execution>
-								<id>docker:start</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>docker:stop</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
 								</goals>
 							</execution>
 						</executions>
