@@ -1,20 +1,11 @@
 package view;
 
-import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.ListSelectionModel;
-import javax.swing.Timer;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -22,6 +13,21 @@ import javax.swing.event.ListSelectionListener;
 import businesslogic.WishlistController;
 import model.Item;
 import model.Wishlist;
+
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.ListSelectionModel;
+import javax.swing.Timer;
+
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.Box;
+import javax.swing.JSeparator;
+import javax.swing.JScrollPane;
+import javax.swing.JInternalFrame;
 
 public class WishlistSwingView extends JFrame implements WishlistView {
 
@@ -39,7 +45,6 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				try {
 					frame = new WishlistSwingView();
@@ -51,12 +56,15 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		});
 	}
 
-
-	public WishlistSwingView() {
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	
+	public WishlistSwingView() {		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 397);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
 		JLabel lblWL = new JLabel("Wishlists:");
 		lblWL.setName("lblWL");
@@ -72,6 +80,9 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		btnAddWL.setName("btnAddWL");
 		btnAddWL.setBounds(80, 123, 89, 23);
 		contentPane.add(btnAddWL);
+		btnAddWL.addActionListener(e -> {
+			
+		});
 
 		JButton btnRemoveWL = new JButton("Remove");
 		btnRemoveWL.setName("btnRemoveWL");
@@ -81,7 +92,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		btnRemoveWL.addActionListener(e -> {
 			controller.removeWishlist(listWLModel.get(listWL.getSelectedIndex()));
 		});
-
+		
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.setName("btnRefresh");
 		btnRefresh.setBounds(337, 0, 89, 23);
@@ -110,6 +121,9 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		btnAddItem.setEnabled(false);
 		btnAddItem.setBounds(80, 281, 89, 23);
 		contentPane.add(btnAddItem);
+		btnAddItem.addActionListener(e -> {
+			
+		});
 
 		JButton btnRemoveItem = new JButton("Remove");
 		btnRemoveItem.setName("btnRemoveItem");
@@ -118,21 +132,21 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		contentPane.add(btnRemoveItem);
 		btnRemoveItem.addActionListener(e -> {
 			controller.removeItemFromWishlist(
-					listItemModel.get(listItem.getSelectedIndex()),
+					listItemModel.get(listItem.getSelectedIndex()), 
 					listWLModel.get(listWL.getSelectedIndex()));
 		});
-
+		
 		lblError = new JLabel("");
 		lblError.setName("lblError");
 		lblError.setForeground(new Color(255, 0, 0));
 		lblError.setBounds(10, 335, 416, 14);
-		contentPane.add(lblError);
-
+		contentPane.add(lblError);		
+		
 		JLabel lblItemDesc = new JLabel("");
 		lblItemDesc.setName("lblItemDesc");
 		lblItemDesc.setBounds(10, 247, 416, 34);
 		contentPane.add(lblItemDesc);
-
+		
 		listItemModel = new DefaultListModel<>();
 		JScrollPane scrollPane2 = new JScrollPane();
 		scrollPane2.setName("scrollPane2");
@@ -184,17 +198,17 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 				}
 			}
 		});
-
+		
 		JSeparator separator1 = new JSeparator();
 		separator1.setBounds(10, 157, 416, 2);
 		separator1.setName("separator1");
 		contentPane.add(separator1);
-
+		
 		JSeparator separator2 = new JSeparator();
 		separator2.setBounds(10, 315, 416, 2);
 		separator2.setName("separator2");
 		contentPane.add(separator2);
-
+		
 	}
 
 	@Override
@@ -222,12 +236,11 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	public void setController(WishlistController controller) {
 		this.controller = controller;
 	}
-
+	
 
 	DefaultListModel<Item> getListItemModel() {
 		return listItemModel;
 	}
-
 
 	DefaultListModel<Wishlist> getListWLModel() {
 		return listWLModel;
