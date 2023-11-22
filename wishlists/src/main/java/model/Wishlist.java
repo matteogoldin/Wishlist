@@ -71,4 +71,9 @@ public class Wishlist{
 		Wishlist other = (Wishlist) obj;
 		return Objects.equals(name, other.name);
 	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }

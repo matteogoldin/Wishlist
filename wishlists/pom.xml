@@ -13,6 +13,7 @@
 		<mockito.version>5.7.0</mockito.version>
 		<testcontainer.version>1.19.1</testcontainer.version>
 		<log4j.version>2.21.1</log4j.version>
+		<junit5.version>5.10.1</junit5.version>
 	</properties>
 
 	<dependencies>
@@ -20,13 +21,18 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.1</version>
+			<version>${junit5.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit5.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.24.2</version>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>3.17.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

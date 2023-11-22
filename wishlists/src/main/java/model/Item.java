@@ -59,5 +59,9 @@ public class Item{
 		return Objects.equals(description, other.description) && Objects.equals(name, other.name)
 				&& Float.floatToIntBits(price) == Float.floatToIntBits(other.price);
 	}
-
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }
