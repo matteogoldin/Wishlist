@@ -26,26 +26,6 @@ public class AddWishlistSwingView extends JFrame {
 
 	private WishlistController controller;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AddWishlistSwingView frame = new AddWishlistSwingView(new WishlistController(null, null));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public AddWishlistSwingView(WishlistController wlController) {
 		this.controller = wlController;
 		MyDocumentListener mdc = new MyDocumentListener();
@@ -112,9 +92,7 @@ public class AddWishlistSwingView extends JFrame {
 		}
 
 		@Override
-		public void changedUpdate(DocumentEvent e) {
-			btnAddEnabler();
-		}
+		public void changedUpdate(DocumentEvent e) {}
 
 		private void btnAddEnabler() {
 			btnAdd.setEnabled(!textName.getText().trim().isEmpty() && !textDesc.getText().trim().isEmpty());

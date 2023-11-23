@@ -75,29 +75,30 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void wlSelectedInListWLEnablesButtons() {
+	public void wlSelectedInListWLEnablesRemoveButtonsAndShowItems() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
 		GuiActionRunner.execute(() -> view.getListWLModel().addElement(wl));
 		window.list("listWL").selectItem(0);
 		window.button("btnRemoveWL").requireEnabled();
+		window.button("btnAddItem").requireEnabled();
 		assertThat(window.list("listItem").valueAt(0)).isEqualTo(wl.getItems().get(0).toString());
 		window.label("lblItem").requireText("Wishes in Birthday:");
 		window.list("listWL").clearSelection();
 		window.button("btnRemoveWL").requireDisabled();
+		window.button("btnAddItem").requireDisabled();
 		window.list("listItem").requireItemCount(0);
 		window.label("lblItem").requireText("Select a Wishlist...");
 	}
 
 	@Test
 	@GUITest
-	public void itemSelectedInListWLEnablesButtons() {
+	public void itemSelectedInListItemEnablesRemoveButtons() {
 		GuiActionRunner.execute(() -> view.getListItemModel().addElement(new Item("Phone", "Samsung Galaxy A52", 300)));
+		window.button("btnRemoveItem").requireDisabled();
 		window.list("listItem").selectItem(0);
 		window.button("btnRemoveItem").requireEnabled();
-		window.list("listItem").clearSelection();
-		window.button("btnRemoveItem").requireDisabled();
 	}
 
 	@Test
@@ -162,23 +163,24 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("listWL").clearSelection();
 		window.label("lblWLDesc").requireText("");
 	}
-	
+
 	@Test
 	@GUITest
-	public void listItemSelectionDisplayTheItemDescriptionAndPrice() {
+	public void listItemSelectionDisplayTheItemDescriptionAndPriceAndEnableRemoveItemButton() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
 		GuiActionRunner.execute(() -> view.getListItemModel().addElement(item));
 		window.label("lblItemDesc").requireText("");
 		window.list("listItem").selectItem(0);
+		window.button("btnRemoveItem").requireEnabled();
 		window.label("lblItemDesc").requireText("Samsung Galaxy A52 (Price: 300,00€)");
-		/*//Clear selection raise an out of bound exception
-		 * window.list("listItem").clearSelection();
-		 * window.label("lblItemDesc").requireText("");
-		 */
+		window.list("listItem").clearSelection();
+		window.label("lblItemDesc").requireText("");
+		window.button("btnRemoveItem").requireDisabled();
+
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnRemoveItemRemoveSelectedItemFromListItem() {
@@ -196,7 +198,7 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).removeItemFromWishlist(item, wl);
 		assertThat(view.getListItemModel().contains(item)).isFalse();
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnRefreshWithNoSelectionOnlyUpdateWLs() {
@@ -209,7 +211,7 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).refreshWishlists();
 		verify(controller, times(0)).refreshItems(wl);
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnRefreshWithWLSelectedIfStillExistsRefreshItsItems() {
@@ -220,7 +222,7 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 			view.getListWLModel().removeElement(wl);
 			view.getListWLModel().addElement(wl);
 			return null;
-			}).when(controller).refreshWishlists();
+		}).when(controller).refreshWishlists();
 		doNothing().when(controller).refreshItems(wl);
 		GuiActionRunner.execute(() -> {
 			view.getListWLModel().addElement(wl);
@@ -232,7 +234,7 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).refreshWishlists();
 		verify(controller).refreshItems(wl);
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnRefreshWithWLSelectedIfNotExistsAnymoreDoesntRefreshItsItems() {
@@ -251,10 +253,24 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(view.getListWLModel().getSize()).isZero();
 		assertThat(view.getListItemModel().getSize()).isZero();
 	}
-	
+
 	@Test
 	@GUITest
-	public void btnAddSetVisibleAddWLFrame() {
+	public void btnAddWLSetVisibleAddWLFrame() {
+		assertThat(view.getAddWLFrame()).isNull();
+		window.button("btnAddWL").click();
+		assertThat(view.getAddWLFrame().isActive()).isTrue();
+	}
+
+	@Test
+	@GUITest
+	public void btnAddItemSetVisibleAddItemFrame() {
+		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+		GuiActionRunner.execute(() -> view.getListWLModel().addElement(wl));
+		window.list("listWL").selectItem(0);
+		assertThat(view.getAddItemFrame()).isNull();
+		window.button("btnAddItem").click();
+		assertThat(view.getAddItemFrame().isActive()).isTrue();
 	}
 
 }

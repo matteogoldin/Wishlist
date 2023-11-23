@@ -40,29 +40,6 @@ public class AddItemSwingView extends JFrame {
 	private WishlistController controller;
 	private Wishlist wl;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddItemSwingView frame = new AddItemSwingView(new WishlistController(null, null), new Wishlist());
-					frame.setVisible(true);
-					String test = "ciao";
-					float f = Float.parseFloat(test);
-					System.out.println(f);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public AddItemSwingView(WishlistController wlController, Wishlist wl) {
 		setTitle("Add Item");
 		this.controller = wlController;
@@ -158,9 +135,7 @@ public class AddItemSwingView extends JFrame {
 		}
 
 		@Override
-		public void changedUpdate(DocumentEvent e) {
-			btnAddEnabler();
-		}
+		public void changedUpdate(DocumentEvent e) {}
 
 		private void btnAddEnabler() {
 			try {
