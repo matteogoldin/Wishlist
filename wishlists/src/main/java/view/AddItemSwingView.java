@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.EventQueue;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -8,34 +10,49 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
 
 import businesslogic.WishlistController;
 import model.Wishlist;
+import model.Item;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
-public class AddWishlistSwingView extends JFrame {
+import java.awt.Color;
+import javax.swing.JFormattedTextField;
+
+public class AddItemSwingView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textName;
 	private JButton btnAdd;
+	private JTextField textName;
 	private JTextArea textDesc;
+	private JLabel lblPrice;
+	private JLabel lblEuro;
+	private JLabel lblPriceError;
+	private JTextField textPrice;
+	
 
 	private WishlistController controller;
+	private Wishlist wl;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				try {
-					AddWishlistSwingView frame = new AddWishlistSwingView(new WishlistController(null, null));
+					AddItemSwingView frame = new AddItemSwingView(new WishlistController(null, null), new Wishlist());
 					frame.setVisible(true);
+					String test = "ciao";
+					float f = Float.parseFloat(test);
+					System.out.println(f);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -46,14 +63,13 @@ public class AddWishlistSwingView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddWishlistSwingView(WishlistController wlController) {
+	public AddItemSwingView(WishlistController wlController, Wishlist wl) {
+		setTitle("Add Item");
 		this.controller = wlController;
 		MyDocumentListener mdc = new MyDocumentListener();
-
-		setName("frameAddWL");
-		setTitle("Add Wishlist");
+		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 307, 235);
+		setBounds(100, 100, 314, 277);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -68,7 +84,7 @@ public class AddWishlistSwingView extends JFrame {
 		textName = new JTextField();
 		textName.setName("textName");
 		textName.setBorder(new EmptyBorder(0, 0, 0, 0));
-		textName.setBounds(10, 36, 278, 20);
+		textName.setBounds(10, 36, 274, 20);
 		contentPane.add(textName);
 		textName.setColumns(10);
 		textName.getDocument().addDocumentListener(mdc);
@@ -89,15 +105,45 @@ public class AddWishlistSwingView extends JFrame {
 		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
 		btnAdd.setName("btnAdd");
-		btnAdd.setBounds(106, 166, 89, 23);
+		btnAdd.setBounds(107, 210, 89, 23);
 		contentPane.add(btnAdd);
 		btnAdd.addActionListener(e -> {
 			String name = textName.getText();
 			String desc = textDesc.getText();
-			Wishlist wl = new Wishlist(name, desc);
-			controller.addWishlist(wl);
+			float price = Float.parseFloat(textPrice.getText());
+			Item item = new Item(name, desc, price);
+			controller.addItemToWishlist(item, wl);
 			this.dispose();
 		});
+		
+		lblPrice = new JLabel("Price:");
+		lblPrice.setName("lblPrice");
+		lblPrice.setBounds(10, 155, 49, 14);
+		contentPane.add(lblPrice);
+		
+		lblEuro = new JLabel("€");
+		lblEuro.setName("lblEuro");
+		lblEuro.setBounds(112, 174, 49, 14);
+		contentPane.add(lblEuro);
+		
+		lblPriceError = new JLabel("Insert a valid price");
+		lblPriceError.setVisible(false);
+		lblPriceError.setForeground(new Color(255, 0, 0));
+		lblPriceError.setName("lblPriceError");
+		lblPriceError.setBounds(125, 174, 142, 14);
+		contentPane.add(lblPriceError);
+		
+		textPrice = new JTextField();
+		textPrice.setText("0.00");
+		textPrice.setHorizontalAlignment(SwingConstants.RIGHT);
+		textPrice.setBorder(new EmptyBorder(0, 0, 0, 0));
+		textPrice.setName("textPrice");
+		textPrice.setBounds(10, 171, 96, 20);
+		contentPane.add(textPrice);
+		textPrice.setColumns(10);
+		textPrice.getDocument().addDocumentListener(mdc);
+		
+		
 	}
 
 	class MyDocumentListener implements DocumentListener {
@@ -117,8 +163,15 @@ public class AddWishlistSwingView extends JFrame {
 		}
 
 		private void btnAddEnabler() {
-			btnAdd.setEnabled(!textName.getText().trim().isEmpty() && !textDesc.getText().trim().isEmpty());
+			try {
+				Float.parseFloat(textPrice.getText());
+				btnAdd.setEnabled(!textName.getText().trim().isEmpty() && !textDesc.getText().trim().isEmpty());
+				lblPriceError.setVisible(false);
+			} catch(Exception e) {
+				lblPriceError.setVisible(true);
+				btnAdd.setEnabled(false);
+			}
+			
 		}
 	}
-
 }
