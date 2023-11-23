@@ -2,6 +2,7 @@ package view;
 
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyVetoException;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -28,12 +29,14 @@ import javax.swing.Box;
 import javax.swing.JSeparator;
 import javax.swing.JScrollPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JTextPane;
 
 public class WishlistSwingView extends JFrame implements WishlistView {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private static WishlistSwingView frame;
+	private AddWishlistSwingView addWLFrame;
 
 	private WishlistController controller;
 
@@ -81,7 +84,8 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		btnAddWL.setBounds(80, 123, 89, 23);
 		contentPane.add(btnAddWL);
 		btnAddWL.addActionListener(e -> {
-			
+			addWLFrame = new AddWishlistSwingView(controller);
+			addWLFrame.setVisible(true);
 		});
 
 		JButton btnRemoveWL = new JButton("Remove");
@@ -208,7 +212,6 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		separator2.setBounds(10, 315, 416, 2);
 		separator2.setName("separator2");
 		contentPane.add(separator2);
-		
 	}
 
 	@Override
@@ -245,5 +248,4 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	DefaultListModel<Wishlist> getListWLModel() {
 		return listWLModel;
 	}
-
 }
