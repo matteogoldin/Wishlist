@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +22,7 @@ public class AddWishlistSwingView extends JFrame {
 	private JButton btnAdd;
 	private JTextArea textDesc;
 
-	private WishlistController controller;
+	private transient WishlistController controller;
 
 	public AddWishlistSwingView(WishlistController wlController) {
 		this.controller = wlController;
@@ -52,7 +50,7 @@ public class AddWishlistSwingView extends JFrame {
 		contentPane.add(textName);
 		textName.setColumns(10);
 		textName.getDocument().addDocumentListener(mdc);
-		
+
 		JLabel lblDesc = new JLabel("Description:");
 		lblDesc.setName("lblDesc");
 		lblDesc.setBounds(10, 67, 278, 14);
@@ -92,7 +90,7 @@ public class AddWishlistSwingView extends JFrame {
 		}
 
 		@Override
-		public void changedUpdate(DocumentEvent e) {}
+		public void changedUpdate(DocumentEvent e) { /* Not used */ }
 
 		private void btnAddEnabler() {
 			btnAdd.setEnabled(!textName.getText().trim().isEmpty() && !textDesc.getText().trim().isEmpty());

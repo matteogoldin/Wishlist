@@ -1,12 +1,19 @@
 package view;
 
-import java.awt.EventQueue;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyVetoException;
+import java.awt.Color;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.ListSelectionModel;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -15,31 +22,14 @@ import businesslogic.WishlistController;
 import model.Item;
 import model.Wishlist;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.ListSelectionModel;
-import javax.swing.Timer;
-
-import java.awt.Color;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JSeparator;
-import javax.swing.JScrollPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JTextPane;
-
 public class WishlistSwingView extends JFrame implements WishlistView {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private static WishlistSwingView frame;
 	private AddWishlistSwingView addWLFrame;
 	private AddItemSwingView addItemFrame;
 
-	private WishlistController controller;
+	private transient WishlistController controller;
 
 	private JList<Wishlist> listWL;
 	private DefaultListModel<Wishlist> listWLModel;
@@ -48,7 +38,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	private JLabel lblError;
 
 	public WishlistSwingView() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 397);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

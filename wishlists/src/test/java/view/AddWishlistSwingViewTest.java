@@ -1,6 +1,5 @@
 package view;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 
@@ -38,12 +37,12 @@ public class AddWishlistSwingViewTest extends AssertJSwingJUnitTestCase{
 		window.show();
 		window.maximize();
 	}
-	
+
 	@After
 	public void OnTearDown() throws Exception {
 		closeable.close();
 	}
-	
+
 	@Test
 	@GUITest
 	public void testInitialStateOfComponents() {
@@ -53,7 +52,7 @@ public class AddWishlistSwingViewTest extends AssertJSwingJUnitTestCase{
 		window.textBox("textName");
 		window.textBox("textDesc");
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnAddEnabledOnlyWhenTextFieldAreFilled() {
@@ -66,7 +65,7 @@ public class AddWishlistSwingViewTest extends AssertJSwingJUnitTestCase{
 		window.textBox("textName").setText("Birthday");
 		window.button("btnAdd").requireEnabled();
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnAddCallControllerAddWishlist() {

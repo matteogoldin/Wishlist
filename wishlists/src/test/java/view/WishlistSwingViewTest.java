@@ -5,16 +5,15 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.Timer;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JListFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.After;
@@ -174,11 +173,11 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("lblItemDesc").requireText("");
 		window.list("listItem").selectItem(0);
 		window.button("btnRemoveItem").requireEnabled();
-		window.label("lblItemDesc").requireText("Samsung Galaxy A52 (Price: 300,00€)");
+		//To match all float print format on different OS
+		window.label("lblItemDesc").requireText(String.format("Samsung Galaxy A52 (Price: %.2f€)", item.getPrice()));
 		window.list("listItem").clearSelection();
 		window.label("lblItemDesc").requireText("");
 		window.button("btnRemoveItem").requireDisabled();
-
 	}
 
 	@Test

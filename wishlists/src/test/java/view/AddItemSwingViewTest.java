@@ -1,6 +1,5 @@
 package view;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
@@ -23,13 +22,13 @@ import model.Wishlist;
 @RunWith(GUITestRunner.class)
 public class AddItemSwingViewTest extends AssertJSwingJUnitTestCase{
 	private FrameFixture window;
-	
+
 	@Mock
 	private WishlistController controller;
 	private AutoCloseable closeable;
 	private AddItemSwingView view;
 	private Wishlist wl;
-	
+
 	@Override
 	protected void onSetUp() throws Exception {
 		closeable = MockitoAnnotations.openMocks(this);
@@ -42,12 +41,12 @@ public class AddItemSwingViewTest extends AssertJSwingJUnitTestCase{
 		window.show();
 		window.maximize();
 	}
-	
+
 	@After
 	public void OnTearDown() throws Exception {
 		closeable.close();
 	}
-	
+
 	@Test
 	@GUITest
 	public void testInitialStateOfComponents() {
@@ -59,39 +58,39 @@ public class AddItemSwingViewTest extends AssertJSwingJUnitTestCase{
 		window.textBox("textPrice");
 		window.label("lblEuro");
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnAddEnabledOnlyWhenTextFieldAreCorrectlyFilled() {
 		window.button("btnAdd").requireDisabled();
-		
+
 		window.textBox("textName").setText("Birthday");
 		window.button("btnAdd").requireDisabled();
-		
+
 		window.textBox("textName").setText(" ");
 		window.textBox("textDesc").setText("My birthday gifts");
 		window.button("btnAdd").requireDisabled();
-		
+
 		window.textBox("textName").setText("Birthday");
 		window.textBox("textDesc").setText("My birthday gifts");
 		window.button("btnAdd").requireEnabled();
-		
+
 		window.textBox("textPrice").setText("one hundred");
 		window.button("btnAdd").requireDisabled();
 		window.label("lblPriceError").requireVisible();
-		
+
 		window.textBox("textPrice").setText("100");
 		window.button("btnAdd").requireEnabled();
-		
+
 		window.textBox("textPrice").setText("100.00");
 		window.button("btnAdd").requireEnabled();
 	}
-	
+
 	@Test
 	@GUITest
 	public void btnAddCallControllerAddWishlist() {
-		window.textBox("textName").setText("Birthday");
-		window.textBox("textDesc").setText("My birthday gifts");
+		window.textBox("textName").setText("Phone");
+		window.textBox("textDesc").setText("Samsung Galaxy A52");
 		window.button("btnAdd").click();
 		verify(controller).addItemToWishlist(isA(Item.class), eq(wl));
 	}
