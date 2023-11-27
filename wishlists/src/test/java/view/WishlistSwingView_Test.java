@@ -12,11 +12,14 @@ import java.util.List;
 
 import javax.swing.Timer;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.assertj.swing.junit.runner.GUITestRunner;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -24,6 +27,7 @@ import businesslogic.WishlistController;
 import model.Item;
 import model.Wishlist;
 
+@RunWith(GUITestRunner.class)
 public class WishlistSwingView_Test extends AssertJSwingJUnitTestCase {
 	private FrameFixture window;
 
@@ -42,7 +46,7 @@ public class WishlistSwingView_Test extends AssertJSwingJUnitTestCase {
 		});
 		window = new FrameFixture(robot(), view);
 		window.show();
-		//window.maximize();
+		window.maximize();
 		//window.normalize();
 	}
 
@@ -50,8 +54,9 @@ public class WishlistSwingView_Test extends AssertJSwingJUnitTestCase {
 	public void OnTearDown() throws Exception {
 		closeable.close();
 	}
-
-	@Test
+	
+	
+	@Test @GUITest
 	public void testInitialStateOfComponents() {
 		window.label("lblWL");
 		window.list("listWL");
