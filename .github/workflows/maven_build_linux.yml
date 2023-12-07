@@ -40,5 +40,5 @@ jobs:
         if: ${{ failure() }}
         with:
           name: failed-gui-test
-          path: 'failed-gui-test'
+          path: '**/failed-gui-tests'
 

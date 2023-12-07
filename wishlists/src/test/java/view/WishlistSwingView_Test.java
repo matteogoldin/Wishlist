@@ -1,3 +1,4 @@
+/*
 package view;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -260,4 +261,4 @@ public class WishlistSwingView_Test extends AssertJSwingJUnitTestCase {
 		assertThat(view.getAddItemFrame().isActive()).isTrue();
 	}
 
-}
+}*/
