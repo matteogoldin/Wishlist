@@ -30,7 +30,7 @@ jobs:
 
       - name: Build with Maven and get code coverage
         run: >
-          mvn verify -Pcoveralls
+          xvfb-run mvn verify -Pcoveralls
           -DrepoToken=$COVERALLS_REPO_TOKEN
           -DpullRequest=${{ github.event.pull_request.number }}
         working-directory: ${{ env.workdir }}

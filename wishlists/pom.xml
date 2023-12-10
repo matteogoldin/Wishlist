@@ -13,6 +13,7 @@
 		<mockito.version>5.7.0</mockito.version>
 		<testcontainer.version>1.19.1</testcontainer.version>
 		<log4j.version>2.21.1</log4j.version>
+		<junit5.version>5.10.1</junit5.version>
 	</properties>
 
 	<dependencies>
@@ -20,13 +21,18 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.1</version>
+			<version>${junit5.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit5.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.24.2</version>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>3.17.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -46,11 +52,11 @@
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-				<dependency>
-				    <groupId>org.apache.logging.log4j</groupId>
-				    <artifactId>log4j-slf4j-impl</artifactId>
-				    <version>${log4j.version}</version>
-				</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
 		<!-- ORM dependencies -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -107,6 +113,8 @@
 					<configuration>
 						<excludes>
 							<exclude>**/model/*</exclude>
+							<exclude>**/app/*</exclude>
+							<exclude>**/utils/*</exclude>
 						</excludes>
 					</configuration>
 					<executions>
@@ -239,51 +247,51 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.43.4</version>
 					<configuration>
-					<showLogs>true</showLogs>
-					<verbose>build</verbose>
-					<images>
-						<image>
-							<alias>database</alias>
-							<name>mysql:8.0.33</name>
-							<run>
-								<wait>
-									<log>mysqld: ready for connections</log>
-									<time>30000</time>
-								</wait>
-								<env>
-									<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
-									<MYSQL_DATABASE>wishlists-schema</MYSQL_DATABASE>
-									<MYSQL_USER>java-client</MYSQL_USER>
-									<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
-								</env>
-								<volumes>
-									<bind>
-										<volume>mysql:/var/lib/mysql</volume>
-									</bind>
-								</volumes>
-								<ports>
-									<port>3308:3306</port>
-								</ports>
-							</run>
-						</image>
-					</images>
-				</configuration>
-				<executions>
-					<execution>
-						<id>docker:start</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>docker:stop</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
+						<showLogs>true</showLogs>
+						<verbose>build</verbose>
+						<images>
+							<image>
+								<alias>database</alias>
+								<name>mysql:8.0.33</name>
+								<run>
+									<wait>
+										<log>mysqld: ready for connections</log>
+										<time>30000</time>
+									</wait>
+									<env>
+										<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
+										<MYSQL_DATABASE>wishlists-schema</MYSQL_DATABASE>
+										<MYSQL_USER>java-client</MYSQL_USER>
+										<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
+									</env>
+									<volumes>
+										<bind>
+											<volume>mysql:/var/lib/mysql</volume>
+										</bind>
+									</volumes>
+									<ports>
+										<port>3308:3306</port>
+									</ports>
+								</run>
+							</image>
+						</images>
+					</configuration>
+					<executions>
+						<execution>
+							<id>docker:start</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>start</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>docker:stop</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

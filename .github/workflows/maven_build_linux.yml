@@ -32,5 +32,13 @@ jobs:
           restore-keys: ${{ runner.os }}-m2-
 
       - name: Build with Maven
-        run: mvn verify
+        run: xvfb-run mvn verify
         working-directory: ${{ env.workdir }}
+        
+      - name: Archive failed gui test
+        uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
+        with:
+          name: failed-gui-test
+          path: '**/failed-gui-tests'
+

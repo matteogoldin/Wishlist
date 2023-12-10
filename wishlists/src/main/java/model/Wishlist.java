@@ -7,6 +7,7 @@ import java.util.Objects;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 
@@ -15,7 +16,7 @@ public class Wishlist{
 	@Id
 	private String name;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(
 	        name="item",
 	        joinColumns= @JoinColumn(name="wishlist_name"))
@@ -70,5 +71,10 @@ public class Wishlist{
 			return false;
 		Wishlist other = (Wishlist) obj;
 		return Objects.equals(name, other.name);
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
 	}
 }
