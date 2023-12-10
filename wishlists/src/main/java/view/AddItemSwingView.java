@@ -1,9 +1,18 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -12,24 +21,13 @@ import businesslogic.WishlistController;
 import model.Item;
 import model.Wishlist;
 
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import javax.swing.JTextField;
-import java.awt.Insets;
-import java.util.regex.Pattern;
-
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import java.awt.Color;
-
 public class AddItemSwingView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textName;
 	private JTextField textPrice;
-	
+
 	private transient WishlistController controller;
 	private transient Wishlist wl;
 	private JButton btnAdd;
@@ -40,29 +38,13 @@ public class AddItemSwingView extends JFrame {
 	private JLabel lblName;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddItemSwingView frame = new AddItemSwingView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	public AddItemSwingView() {
 		MyDocumentListener mdc = new MyDocumentListener();
-		
+
 		setTitle("Add Item");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -74,7 +56,7 @@ public class AddItemSwingView extends JFrame {
 		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		lblName = new JLabel("Name:");
 		lblName.setName("lblName");
 		GridBagConstraints gbc_lblName = new GridBagConstraints();
@@ -83,7 +65,7 @@ public class AddItemSwingView extends JFrame {
 		gbc_lblName.gridx = 0;
 		gbc_lblName.gridy = 0;
 		contentPane.add(lblName, gbc_lblName);
-		
+
 		textName = new JTextField();
 		textName.setName("textName");
 		GridBagConstraints gbc_textName = new GridBagConstraints();
@@ -93,7 +75,7 @@ public class AddItemSwingView extends JFrame {
 		gbc_textName.gridy = 1;
 		contentPane.add(textName, gbc_textName);
 		textName.setColumns(10);
-		
+
 		lblDesc = new JLabel("Description:");
 		lblDesc.setName("lblDesc");
 		GridBagConstraints gbc_lblDesc = new GridBagConstraints();
@@ -102,7 +84,7 @@ public class AddItemSwingView extends JFrame {
 		gbc_lblDesc.gridx = 0;
 		gbc_lblDesc.gridy = 2;
 		contentPane.add(lblDesc, gbc_lblDesc);
-		
+
 		textDesc = new JTextArea();
 		textDesc.setName("textDesc");
 		GridBagConstraints gbc_textDesc = new GridBagConstraints();
@@ -112,7 +94,7 @@ public class AddItemSwingView extends JFrame {
 		gbc_textDesc.gridy = 3;
 		contentPane.add(textDesc, gbc_textDesc);
 		textDesc.getDocument().addDocumentListener(mdc);
-		
+
 		lblPrice = new JLabel("Price in €:");
 		lblPrice.setName("lblPrice");
 		GridBagConstraints gbc_lblPrice = new GridBagConstraints();
@@ -121,7 +103,7 @@ public class AddItemSwingView extends JFrame {
 		gbc_lblPrice.gridx = 0;
 		gbc_lblPrice.gridy = 4;
 		contentPane.add(lblPrice, gbc_lblPrice);
-		
+
 		textPrice = new JTextField();
 		textPrice.setName("textPrice");
 		textPrice.setText("0.00");
@@ -133,7 +115,7 @@ public class AddItemSwingView extends JFrame {
 		contentPane.add(textPrice, gbc_textPrice);
 		textPrice.setColumns(10);
 		textPrice.getDocument().addDocumentListener(mdc);
-		
+
 		lblPriceError = new JLabel("Insert a valid price");
 		lblPriceError.setForeground(Color.RED);
 		lblPriceError.setVisible(false);
@@ -144,7 +126,7 @@ public class AddItemSwingView extends JFrame {
 		gbc_lblPriceError.gridx = 0;
 		gbc_lblPriceError.gridy = 6;
 		contentPane.add(lblPriceError, gbc_lblPriceError);
-		
+
 		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
 		btnAdd.setName("btnAdd");
@@ -177,7 +159,7 @@ public class AddItemSwingView extends JFrame {
 	void setWl(Wishlist wl) {
 		this.wl = wl;
 	}
-	
+
 	class MyDocumentListener implements DocumentListener {
 		@Override
 		public void insertUpdate(DocumentEvent e) {
@@ -203,7 +185,7 @@ public class AddItemSwingView extends JFrame {
 				btnAdd.setEnabled(false);
 			}
 		}
-		
+
 		private boolean isNumberFormat(String input) {
 	        return Pattern.matches("\\d+(\\.\\d+)?", input);
 	    }

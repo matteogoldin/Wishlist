@@ -1,9 +1,16 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -11,49 +18,26 @@ import javax.swing.event.DocumentListener;
 import businesslogic.WishlistController;
 import model.Wishlist;
 
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import javax.swing.JTextField;
-import java.awt.Insets;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-
 public class AddWishlistSwingView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textName;
-	
+
 	private transient WishlistController controller;
 	private JLabel lblName;
 	private JLabel lblDesc;
 	private JTextArea textDesc;
 	private JButton btnAdd;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddWishlistSwingView frame = new AddWishlistSwingView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
+	 /**
 	 * Create the frame.
 	 */
 	public AddWishlistSwingView() {
 		MyDocumentListener mdc = new MyDocumentListener();
-		
+
 		setTitle("Add Wishlist");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,7 +49,7 @@ public class AddWishlistSwingView extends JFrame {
 		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		lblName = new JLabel("Name:");
 		lblName.setName("lblName");
 		GridBagConstraints gbc_lblName = new GridBagConstraints();
@@ -74,7 +58,7 @@ public class AddWishlistSwingView extends JFrame {
 		gbc_lblName.gridx = 0;
 		gbc_lblName.gridy = 0;
 		contentPane.add(lblName, gbc_lblName);
-		
+
 		textName = new JTextField();
 		textName.setName("textName");
 		GridBagConstraints gbc_textName = new GridBagConstraints();
@@ -85,7 +69,7 @@ public class AddWishlistSwingView extends JFrame {
 		contentPane.add(textName, gbc_textName);
 		textName.setColumns(10);
 		textName.getDocument().addDocumentListener(mdc);
-		
+
 		lblDesc = new JLabel("Description:");
 		lblDesc.setName("lblDesc");
 		GridBagConstraints gbc_lblDesc = new GridBagConstraints();
@@ -94,7 +78,7 @@ public class AddWishlistSwingView extends JFrame {
 		gbc_lblDesc.gridx = 0;
 		gbc_lblDesc.gridy = 2;
 		contentPane.add(lblDesc, gbc_lblDesc);
-		
+
 		textDesc = new JTextArea();
 		textDesc.setName("textDesc");
 		GridBagConstraints gbc_textDesc = new GridBagConstraints();
@@ -104,7 +88,7 @@ public class AddWishlistSwingView extends JFrame {
 		gbc_textDesc.gridy = 3;
 		contentPane.add(textDesc, gbc_textDesc);
 		textDesc.getDocument().addDocumentListener(mdc);
-		
+
 		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
 		btnAdd.setName("btnAdd");
@@ -128,7 +112,7 @@ public class AddWishlistSwingView extends JFrame {
 	void setController(WishlistController controller) {
 		this.controller = controller;
 	}
-	
+
 	class MyDocumentListener implements DocumentListener {
 		@Override
 		public void insertUpdate(DocumentEvent e) {
