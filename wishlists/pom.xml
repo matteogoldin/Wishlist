@@ -141,12 +141,10 @@
 						<targetClasses>
 							<param>businesslogic.*</param>
 							<param>daos.*</param>
-							<param>view.*</param>
 						</targetClasses>
 						<targetTests>
 							<param>businesslogic.*Test*</param>
 							<param>daos.*Test*</param>
-							<param>view.*Test*</param>
 						</targetTests>
 						<mutators>
 							<mutator>DEFAULTS</mutator>
