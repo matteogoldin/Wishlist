@@ -50,7 +50,9 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	private JButton btnAddItem;
 	private JButton btnRemoveItem;
 	private JSeparator separator2;
-
+	
+	private Wishlist selectedWL;
+	
 	public WishlistSwingView() {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 397);
@@ -127,6 +129,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 					showAllItems(listWLModel.elementAt(selectedIndex));
 					lblWLDesc.setText(listWLModel.elementAt(selectedIndex).getDesc());
 					lblItem.setText(String.format("Wishes in %s:", listWLModel.elementAt(selectedIndex).getName()));
+					selectedWL = listWLModel.elementAt(selectedIndex);
 				} else {
 					listItemModel.clear();
 					lblWLDesc.setText("");
@@ -262,7 +265,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		btnRemoveItem.addActionListener(e -> {
 			clearError();
 			controller.removeItemFromWishlist(listItemModel.get(listItem.getSelectedIndex()),
-					listWLModel.get(listWL.getSelectedIndex()));
+					selectedWL);
 		});
 
 		separator2 = new JSeparator();
