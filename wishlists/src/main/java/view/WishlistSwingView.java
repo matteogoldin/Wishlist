@@ -153,7 +153,8 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		gbc_btnAddWL.gridy = 3;
 		contentPane.add(btnAddWL, gbc_btnAddWL);
 		btnAddWL.addActionListener(e -> {
-			addWLFrame = new AddWishlistSwingView(controller);
+			addWLFrame = new AddWishlistSwingView();
+			addWLFrame.setController(controller);
 			addWLFrame.setVisible(true);
 		});
 

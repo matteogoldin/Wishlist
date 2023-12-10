@@ -41,7 +41,6 @@ public class AddItemSwingViewTest extends AssertJSwingJUnitTestCase{
 		});
 		window = new FrameFixture(robot(), view);
 		window.show();
-		//window.maximize();
 	}
 
 	@After

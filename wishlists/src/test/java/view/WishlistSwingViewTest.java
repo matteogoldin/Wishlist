@@ -45,7 +45,6 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		});
 		window = new FrameFixture(robot(), view);
 		window.show();
-		//window.maximize();
 	}
 
 	@After
@@ -259,6 +258,7 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(view.getAddWLFrame()).isNull();
 		window.button("btnAddWL").click();
 		assertThat(view.getAddWLFrame().isActive()).isTrue();
+		assertThat(view.getAddWLFrame().getController()).isEqualTo(controller);
 	}
 
 	@Test
@@ -270,8 +270,8 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(view.getAddItemFrame()).isNull();
 		window.button("btnAddItem").click();
 		assertThat(view.getAddItemFrame().isActive()).isTrue();
-		assertThat(view.getAddItemFrame().getController()).isNotNull();
-		assertThat(view.getAddItemFrame().getWl()).isNotNull();
+		assertThat(view.getAddItemFrame().getController()).isEqualTo(controller);
+		assertThat(view.getAddItemFrame().getWl()).isEqualTo(wl);
 	}
 
 }

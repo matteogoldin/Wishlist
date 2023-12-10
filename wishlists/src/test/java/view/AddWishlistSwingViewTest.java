@@ -30,12 +30,12 @@ public class AddWishlistSwingViewTest extends AssertJSwingJUnitTestCase{
 	protected void onSetUp() throws Exception {
 		closeable = MockitoAnnotations.openMocks(this);
 		GuiActionRunner.execute(() -> {
-			view = new AddWishlistSwingView(controller);
+			view = new AddWishlistSwingView();
+			view.setController(controller);
 			return view;
 		});
 		window = new FrameFixture(robot(), view);
 		window.show();
-		//window.maximize();
 	}
 
 	@After
