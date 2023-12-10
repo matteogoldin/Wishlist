@@ -29,7 +29,7 @@ class WishlistControllerIT {
 	@BeforeEach
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
-		wlDao = new WishlistDAO("wishlists-pu");
+		wlDao = new WishlistDAO("wishlists-pu-it");
 		controller = new WishlistController(view, wlDao);
 		for (Wishlist wl : wlDao.getAll())
 			wlDao.remove(wl);

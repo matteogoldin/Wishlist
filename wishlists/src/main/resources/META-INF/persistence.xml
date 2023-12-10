@@ -10,7 +10,7 @@
 	        <property name="hibernate.hbm2ddl.auto" value="create"/>
 	        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
 	        <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-	        <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3308/wishlists-schema?autoReconnect=true"/>
+	        <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3309/wishlists-schema?autoReconnect=true"/>
 	        <property name="jakarta.persistence.jdbc.user" value="java-client"/>
 	        <property name="jakarta.persistence.jdbc.password" value="password"/>
 	        <property name="hibernate.show_sql" value="true" />

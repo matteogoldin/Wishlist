@@ -260,7 +260,7 @@
 									</wait>
 									<env>
 										<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
-										<MYSQL_DATABASE>wishlists-schema</MYSQL_DATABASE>
+										<MYSQL_DATABASE>wishlists-schema-it</MYSQL_DATABASE>
 										<MYSQL_USER>java-client</MYSQL_USER>
 										<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
 									</env>
