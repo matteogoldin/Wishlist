@@ -17,6 +17,7 @@ import javax.swing.event.DocumentListener;
 
 import businesslogic.WishlistController;
 import model.Wishlist;
+import utils.Generated;
 
 public class AddWishlistSwingView extends JFrame {
 
@@ -123,7 +124,8 @@ public class AddWishlistSwingView extends JFrame {
 		public void removeUpdate(DocumentEvent e) {
 			btnAddEnabler();
 		}
-
+		
+		@Generated
 		@Override
 		public void changedUpdate(DocumentEvent e) { /* Not used */ }
 

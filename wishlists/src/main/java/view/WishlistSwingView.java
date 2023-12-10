@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
-import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -90,6 +89,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		gbc_btnRefresh.gridy = 0;
 		contentPane.add(btnRefresh, gbc_btnRefresh);
 		btnRefresh.addActionListener(e -> {
+			clearError();
 			int selectedIndex = listWL.getSelectedIndex();
 			if (selectedIndex != -1) {
 				Wishlist wl = listWLModel.getElementAt(selectedIndex);
@@ -119,6 +119,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		listWL.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+				clearError();
 				int selectedIndex = listWL.getSelectedIndex();
 				btnRemoveWL.setEnabled(selectedIndex != -1);
 				btnAddItem.setEnabled(selectedIndex != -1);
@@ -153,6 +154,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		gbc_btnAddWL.gridy = 3;
 		contentPane.add(btnAddWL, gbc_btnAddWL);
 		btnAddWL.addActionListener(e -> {
+			clearError();
 			addWLFrame = new AddWishlistSwingView();
 			addWLFrame.setController(controller);
 			addWLFrame.setVisible(true);
@@ -168,6 +170,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		gbc_btnRemoveWL.gridy = 3;
 		contentPane.add(btnRemoveWL, gbc_btnRemoveWL);
 		btnRemoveWL.addActionListener(e -> {
+			clearError();
 			controller.removeWishlist(listWLModel.get(listWL.getSelectedIndex()));
 		});
 
@@ -208,6 +211,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		listItem.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+				clearError();
 				int selectedIndex = listItem.getSelectedIndex();
 				btnRemoveItem.setEnabled(selectedIndex != -1);
 				if (selectedIndex != -1) {
@@ -239,6 +243,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		gbc_btnAddItem.gridy = 8;
 		contentPane.add(btnAddItem, gbc_btnAddItem);
 		btnAddItem.addActionListener(e -> {
+			clearError();
 			addItemFrame = new AddItemSwingView();
 			addItemFrame.setController(controller);
 			addItemFrame.setWl(listWLModel.get(listWL.getSelectedIndex()));
@@ -255,6 +260,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		gbc_btnRemoveItem.gridy = 8;
 		contentPane.add(btnRemoveItem, gbc_btnRemoveItem);
 		btnRemoveItem.addActionListener(e -> {
+			clearError();
 			controller.removeItemFromWishlist(listItemModel.get(listItem.getSelectedIndex()),
 					listWLModel.get(listWL.getSelectedIndex()));
 		});
@@ -296,11 +302,10 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	@Override
 	public void showError(String errorMessage) {
 		lblError.setText(errorMessage);
-		Timer timer = new Timer(3000, event -> {
-			lblError.setText("");
-		});
-		timer.setRepeats(false);
-		timer.start();
+	}
+	
+	public void clearError() {
+		lblError.setText("");
 	}
 
 	public void setController(WishlistController controller) {

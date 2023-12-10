@@ -9,8 +9,6 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Timer;
-
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
@@ -127,15 +125,54 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void showErrorDisplayMessageOnErrorLabelForFewSeconds() throws InterruptedException {
+	public void showErrorDisplayMessageOnErrorLabelUntilNextUIInteraction() throws InterruptedException {
 		String error = "Error: please try again";
+		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
+		wl.getItems().add(item);
+		GuiActionRunner.execute(() -> {
+			view.getListWLModel().addElement(wl);
+			view.getListItemModel().addElement(item);
+		});
+		
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
-		Timer timer = new Timer(3000, event -> {
-			window.label("lblError").requireText("");
-		});
-		timer.setRepeats(false);
-		timer.start();
+		window.button("btnRefresh").click();
+		window.label("lblError").requireText("");
+		
+		GuiActionRunner.execute(() -> view.showError(error));
+		window.label("lblError").requireText(error);
+		window.list("listWL").selectItem(0);
+		window.label("lblError").requireText("");
+		
+		GuiActionRunner.execute(() -> view.showError(error));
+		window.label("lblError").requireText(error);
+		window.button("btnAddWL").click();
+		view.getAddWLFrame().dispose();
+		window.label("lblError").requireText("");
+		
+		GuiActionRunner.execute(() -> view.showError(error));
+		window.label("lblError").requireText(error);
+		window.list("listWL").selectItem(0);
+		window.button("btnRemoveWL").click();
+		window.label("lblError").requireText("");
+		
+		GuiActionRunner.execute(() -> view.showError(error));
+		window.label("lblError").requireText(error);
+		window.list("listItem").selectItem(0);
+		window.label("lblError").requireText("");
+		
+		GuiActionRunner.execute(() -> view.showError(error));
+		window.label("lblError").requireText(error);
+		window.button("btnAddItem").click();
+		view.getAddItemFrame().dispose();
+		window.label("lblError").requireText("");
+		
+		GuiActionRunner.execute(() -> view.showError(error));
+		window.label("lblError").requireText(error);
+		window.list("listItem").selectItem(0);
+		window.button("btnRemoveItem").click();
+		window.label("lblError").requireText("");
 	}
 
 	@Test

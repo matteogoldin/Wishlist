@@ -20,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import businesslogic.WishlistController;
 import model.Item;
 import model.Wishlist;
+import utils.Generated;
 
 public class AddItemSwingView extends JFrame {
 
@@ -171,6 +172,7 @@ public class AddItemSwingView extends JFrame {
 			btnAddEnabler();
 		}
 
+		@Generated
 		@Override
 		public void changedUpdate(DocumentEvent e) { /* Not used */ }
 
@@ -190,5 +192,4 @@ public class AddItemSwingView extends JFrame {
 	        return Pattern.matches("\\d+(\\.\\d+)?", input);
 	    }
 	}
-
 }

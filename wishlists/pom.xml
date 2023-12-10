@@ -114,6 +114,7 @@
 						<excludes>
 							<exclude>**/model/*</exclude>
 							<exclude>**/app/*</exclude>
+							<exclude>**/utils/*</exclude>
 						</excludes>
 					</configuration>
 					<executions>
