@@ -270,6 +270,8 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(view.getAddItemFrame()).isNull();
 		window.button("btnAddItem").click();
 		assertThat(view.getAddItemFrame().isActive()).isTrue();
+		assertThat(view.getAddItemFrame().getController()).isNotNull();
+		assertThat(view.getAddItemFrame().getWl()).isNotNull();
 	}
 
 }

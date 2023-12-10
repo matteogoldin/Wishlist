@@ -34,7 +34,9 @@ public class AddItemSwingViewTest extends AssertJSwingJUnitTestCase{
 		closeable = MockitoAnnotations.openMocks(this);
 		GuiActionRunner.execute(() -> {
 			wl = new Wishlist("Birthday", "My birthday gifts");
-			view = new AddItemSwingView(controller, wl);
+			view = new AddItemSwingView();
+			view.setController(controller);
+			view.setWl(wl);
 			return view;
 		});
 		window = new FrameFixture(robot(), view);
@@ -56,7 +58,6 @@ public class AddItemSwingViewTest extends AssertJSwingJUnitTestCase{
 		window.textBox("textName");
 		window.textBox("textDesc");
 		window.textBox("textPrice");
-		window.label("lblEuro");
 	}
 
 	@Test
