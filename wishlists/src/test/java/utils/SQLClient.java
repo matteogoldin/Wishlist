@@ -23,24 +23,24 @@ public class SQLClient {
 		em.close();
 	}
 	
-	public void insertWishlist(Wishlist wl) {
+	public void insertWishlist(String name, String desc) {
 		String nativeQuery = "INSERT INTO Wishlist (name, description) VALUES (?, ?)";
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.createNativeQuery(nativeQuery)
-			.setParameter(1, wl.getName())
-			.setParameter(2, wl.getDesc())
+			.setParameter(1, name)
+			.setParameter(2, desc)
 			.executeUpdate();
 		em.getTransaction().commit();
 		em.close();
 	}
 	
-	public Wishlist findWishlist(Wishlist wl) {
+	public Wishlist findWishlist(String name) {
 		EntityManager em = emf.createEntityManager();
 		Wishlist wl_dup = null;
 		try {
 			wl_dup = em.createQuery("SELECT wl FROM Wishlist wl WHERE wl.name = :name", Wishlist.class)
-				.setParameter("name", wl.getName())
+				.setParameter("name", name)
 				.getSingleResult();
 		} catch (NoResultException e) {
 			wl_dup = null;
@@ -50,13 +50,13 @@ public class SQLClient {
 	}
 	
 	
-	public Item findItem(Wishlist wl, Item item) {
+	public Item findItem(String wlName, String itemName) {
 		EntityManager em = emf.createEntityManager();
 		Item item_dup = null;
 		try {
 			item_dup = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name AND it.name = :it_name", Item.class)
-					.setParameter("wl_name", wl.getName())
-					.setParameter("it_name", item.getName())
+					.setParameter("wl_name", wlName)
+					.setParameter("it_name", itemName)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			item_dup = null;
@@ -65,25 +65,25 @@ public class SQLClient {
 		return item_dup;
 	}
 	
-	public void insertItem(Wishlist wl, Item item) {
+	public void insertItem(String wlName, String itemName, String itemDesc, float itemPrice) {
 		String nativeQuery = "INSERT INTO item (name, description, price, wishlist_name) VALUES (?, ?, ?, ?)";
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.createNativeQuery(nativeQuery)
-			.setParameter(1, item.getName())
-			.setParameter(2, item.getDesc())
-			.setParameter(3, item.getPrice())
-			.setParameter(4, wl.getName())
+			.setParameter(1, itemName)
+			.setParameter(2, itemDesc)
+			.setParameter(3, itemPrice)
+			.setParameter(4, wlName)
 			.executeUpdate();
 		em.getTransaction().commit();
 		em.close();
 	}
 	
-	public List<Item> findAllItemsFromAWL(Wishlist wl) {
+	public List<Item> findAllItemsFromAWL(String wlName) {
 		List<Item> itemList;
 		EntityManager em = emf.createEntityManager();
 		itemList = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name", Item.class)
-				.setParameter("wl_name", wl.getName())
+				.setParameter("wl_name", wlName)
 				.getResultList();
 		em.close();
 		return itemList;

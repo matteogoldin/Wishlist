@@ -37,7 +37,7 @@ class WishlistDAOTest {
 	@Test
 	void getAllWhenDatabaseIsNotEmptyReturnANotEmptyList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		client.insertWishlist(wl);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		assertThat(wDao.getAll()).hasSize(1);
 	}
 
@@ -45,7 +45,7 @@ class WishlistDAOTest {
 	void WishlistCorrectlyInserted() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		wDao.add(wl);
-		Wishlist wl_dup = client.findWishlist(wl);
+		Wishlist wl_dup = client.findWishlist(wl.getName());
 		assertThat(wl).isEqualTo(wl_dup);
 	}
 
@@ -67,9 +67,9 @@ class WishlistDAOTest {
 	@Test
 	void wishlistCorrectlyRemoved() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		client.insertWishlist(wl);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		wDao.remove(wl);
-		assertThat(client.findWishlist(wl)).isNull();
+		assertThat(client.findWishlist(wl.getName())).isNull();
 	}
 
 	@Test
@@ -81,21 +81,21 @@ class WishlistDAOTest {
 	@Test
 	void removingAWishlistRemovesAlsoItsItems() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		client.insertWishlist(wl);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
 		client.mergeWishlist(wl);
-		assertThat(client.findItem(wl, item)).isNotNull();
+		assertThat(client.findItem(wl.getName(), item.getName())).isNotNull();
 		wDao.remove(wl);
-		assertThat(client.findItem(wl, item)).isNull();
+		assertThat(client.findItem(wl.getName(), item.getName())).isNull();
 	}
 
 	@Test
 	void getAllCorrectlyRetrieveAllTheWishlists() {
 		Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
 		Wishlist wl2 = new Wishlist("Christmas", "Gift ideas");
-		client.insertWishlist(wl1);
-		client.insertWishlist(wl2);
+		client.insertWishlist(wl1.getName(), wl1.getDesc());
+		client.insertWishlist(wl2.getName(), wl2.getDesc());
 		List<Wishlist> wlList = wDao.getAll();
 		assertAll(() -> assertThat(wlList).hasSize(2), () -> assertThat(wlList).contains(wl1),
 				() -> assertThat(wlList).contains(wl2));
@@ -109,7 +109,7 @@ class WishlistDAOTest {
 	@Test
 	void findByIdCorrectlyRetrieveAWishlist() {
 		Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
-		client.insertWishlist(wl1);
+		client.insertWishlist(wl1.getName(), wl1.getDesc());
 		assertThat(wDao.findById(wl1.getName())).isEqualTo(wl1);
 	}
 
@@ -122,10 +122,10 @@ class WishlistDAOTest {
 	void addItemAddAnItemToAWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
-		client.insertWishlist(wl);
-		assertThat(client.findItem(wl, item)).isNull();
+		client.insertWishlist(wl.getName(), wl.getDesc());
+		assertThat(client.findItem(wl.getName(), item.getDesc())).isNull();
 		wDao.addItem(wl, item);
-		assertThat(client.findItem(wl, item)).isEqualTo(item);
+		assertThat(client.findItem(wl.getName(), item.getName())).isEqualTo(item);
 	}
 
 	@Test
@@ -139,13 +139,13 @@ class WishlistDAOTest {
 	@Test
 	void removeItemRemovesItemFromTheWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		client.insertWishlist(wl);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
-		client.insertItem(wl, item);
-		assertThat(client.findItem(wl, item)).isNotNull();
+		client.insertItem(wl.getName(), item.getName(), item.getDesc(), item.getPrice());
+		assertThat(client.findItem(wl.getName(), item.getName())).isNotNull();
 		wDao.removeItem(wl, item);
-		assertThat(client.findItem(wl, item)).isNull();
+		assertThat(client.findItem(wl.getName(), item.getName())).isNull();
 	}
 	
 	@Test
@@ -159,11 +159,11 @@ class WishlistDAOTest {
 	@Test
 	void getAllWlItemsReturnsAllTheItemsAssociatedToAList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		client.insertWishlist(wl);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		Item item1 = new Item("Phone", "Samsung Galaxy A52", 300);
 		Item item2 = new Item("Wallet", "D&G", 100);
-		client.insertItem(wl, item1);
-		client.insertItem(wl, item2);
+		client.insertItem(wl.getName(), item1.getName(), item1.getDesc(), item1.getPrice());
+		client.insertItem(wl.getName(), item2.getName(), item2.getDesc(), item2.getPrice());
 		List<Item> itList = wDao.getAllWlItems(wl);
 		assertThat(itList).containsExactly(item1, item2);
 	}
