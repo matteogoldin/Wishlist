@@ -5,19 +5,25 @@ import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Persistence;
 import model.Item;
 import model.Wishlist;
 
-public final class DAOTestsSQLQueries {
-
-	public static void initEmptyDB(EntityManagerFactory emf) {
+public class SQLClient {
+	EntityManagerFactory emf;
+	
+	public SQLClient(String persistenceUnit) {
+		emf = Persistence.createEntityManagerFactory(persistenceUnit);
+	}
+	
+	public void initEmptyDB() {
 		EntityManager em = emf.createEntityManager();
 		em.createNativeQuery("truncate table Item");
 		em.createNativeQuery("truncate table Wishlist");
 		em.close();
 	}
 	
-	public static void insertWishlist(Wishlist wl, EntityManagerFactory emf) {
+	public void insertWishlist(Wishlist wl) {
 		String nativeQuery = "INSERT INTO Wishlist (name, description) VALUES (?, ?)";
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
@@ -29,7 +35,7 @@ public final class DAOTestsSQLQueries {
 		em.close();
 	}
 	
-	public static Wishlist findWishlist(Wishlist wl, EntityManagerFactory emf) {
+	public Wishlist findWishlist(Wishlist wl) {
 		EntityManager em = emf.createEntityManager();
 		Wishlist wl_dup = null;
 		try {
@@ -44,7 +50,7 @@ public final class DAOTestsSQLQueries {
 	}
 	
 	
-	public static Item findItem(Wishlist wl, Item item, EntityManagerFactory emf) {
+	public Item findItem(Wishlist wl, Item item) {
 		EntityManager em = emf.createEntityManager();
 		Item item_dup = null;
 		try {
@@ -59,7 +65,7 @@ public final class DAOTestsSQLQueries {
 		return item_dup;
 	}
 	
-	public static void insertItem(Wishlist wl, Item item, EntityManagerFactory emf) {
+	public void insertItem(Wishlist wl, Item item) {
 		String nativeQuery = "INSERT INTO item (name, description, price, wishlist_name) VALUES (?, ?, ?, ?)";
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
@@ -73,7 +79,7 @@ public final class DAOTestsSQLQueries {
 		em.close();
 	}
 	
-	public static List<Item> findAllItemsFromAWL(Wishlist wl, EntityManagerFactory emf) {
+	public List<Item> findAllItemsFromAWL(Wishlist wl) {
 		List<Item> itemList;
 		EntityManager em = emf.createEntityManager();
 		itemList = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name", Item.class)
@@ -83,7 +89,7 @@ public final class DAOTestsSQLQueries {
 		return itemList;
 	}
 
-	public static void mergeWishlist(Wishlist wl, EntityManagerFactory emf) {
+	public void mergeWishlist(Wishlist wl) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.merge(wl);

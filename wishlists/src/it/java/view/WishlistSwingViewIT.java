@@ -22,7 +22,7 @@ import daos.WishlistDAO;
 import jakarta.persistence.EntityManagerFactory;
 import model.Item;
 import model.Wishlist;
-import utils.DAOTestsSQLQueries;
+import utils.SQLClient;
 
 @RunWith(GUITestRunner.class)
 public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
