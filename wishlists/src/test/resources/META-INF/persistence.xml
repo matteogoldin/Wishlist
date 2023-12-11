@@ -19,4 +19,20 @@
 			<property name="hibernate.use_sql_comments" value="true" />
     	</properties>
 	</persistence-unit>
+	<persistence-unit name="wishlists-pu-it">
+	    <description>Wishlists project persistence unit</description>
+	    <class>model.Wishlist</class>
+	    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+	    <properties>
+	        <property name="hibernate.hbm2ddl.auto" value="create"/>
+	        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+	        <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+	        <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3308/wishlists-schema-it?autoReconnect=true"/>
+	        <property name="jakarta.persistence.jdbc.user" value="java-client"/>
+	        <property name="jakarta.persistence.jdbc.password" value="password"/>
+	        <property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.use_sql_comments" value="true" />
+    	</properties>
+	</persistence-unit>
 </persistence>
