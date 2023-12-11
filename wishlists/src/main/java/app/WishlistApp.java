@@ -15,6 +15,7 @@ public class WishlistApp {
 				WishlistController controller = new WishlistController(view, dao);
 				view.setController(controller);
 				view.setVisible(true);
+				controller.refreshWishlists();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

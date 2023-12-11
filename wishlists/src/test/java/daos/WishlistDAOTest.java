@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
+import utils.DAOTestsSQLQueries;
 
 class WishlistDAOTest {
 	private WishlistDAO wDao;

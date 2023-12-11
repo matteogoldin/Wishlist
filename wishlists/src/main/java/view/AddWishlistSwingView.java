@@ -36,7 +36,7 @@ public class AddWishlistSwingView extends JFrame {
 	 */
 	public AddWishlistSwingView() {
 		MyDocumentListener mdc = new MyDocumentListener();
-
+		
 		setTitle("Add Wishlist");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);

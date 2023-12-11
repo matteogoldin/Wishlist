@@ -1,4 +1,4 @@
-package daos;
+package utils;
 
 import java.util.List;
 
