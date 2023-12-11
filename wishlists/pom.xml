@@ -177,10 +177,26 @@
 					<version>3.2.2</version>
 					<executions>
 						<execution>
+							<id>it-tests</id>
 							<goals>
 								<goal>integration-test</goal>
 								<goal>verify</goal>
 							</goals>
+						</execution>
+						<execution>
+							<id>e2e-tests</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<excludes>
+									<exclude>**/*IT.java</exclude>
+								</excludes>
+								<includes>
+									<include>**/*E2E.java</include>
+								</includes>
+							</configuration>
 						</execution>
 					</executions>
 				</plugin>
@@ -198,6 +214,7 @@
 							<configuration>
 								<sources>
 									<source>src/it/java</source>
+									<source>src/e2e/java</source>
 								</sources>
 							</configuration>
 						</execution>
@@ -264,11 +281,11 @@
 										<MYSQL_USER>java-client</MYSQL_USER>
 										<MYSQL_PASSWORD>password</MYSQL_PASSWORD>
 									</env>
-									<volumes>
+									<!--<volumes>
 										<bind>
 											<volume>mysql:/var/lib/mysql</volume>
 										</bind>
-									</volumes>
+									</volumes>-->
 									<ports>
 										<port>3308:3306</port>
 									</ports>
