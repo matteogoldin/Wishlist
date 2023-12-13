@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.GenericTypeMatcher;
+import org.assertj.swing.finder.FrameFinder;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.FrameFixture;
 
@@ -84,36 +85,19 @@ public class WishlistSwingAppSteps {
 		itemNames.forEach(
 				n -> assertThat(mainWindow.list("listItem").contents()).anySatisfy(e -> assertThat(e).isEqualTo(n)));
 	}
-
-	@When("The user click the Add button under the wishlists list")
-	public void the_user_click_the_add_button_under_the_wishlists_list() {
-		mainWindow.button("btnAddWL").click();
+	
+	@When("The button Remove under wishlists list is clicked")
+	public void the_button_remove_under_wishlists_list_is_clicked() {
+	    mainWindow.button("btnRemoveWL").click();
 	}
-
-	@Then("The Add Wishlist view is shown")
-	public void the_add_wishlist_view_is_shown() {
-		addWLWindow = WindowFinder.findFrame(new GenericTypeMatcher<AddWishlistSwingView>(AddWishlistSwingView.class) {
-			@Override
-			protected boolean isMatching(AddWishlistSwingView frame) {
-				return frame.isShowing();
-			}
-		}).using(BasicRobot.robotWithCurrentAwtHierarchy());
-		addWLWindow.requireVisible();
+	
+	@When("The item {string} is selected")
+	public void the_item_is_selected(String itemName) {
+	    mainWindow.list("listItem").selectItem(itemName);
 	}
-
-	@When("The user enter the following values in Add Wishlist view: Name: {string}, Description: {string}")
-	public void the_user_enter_the_following_values_in_add_wishlist_view_name_description(String name, String desc) {
-		addWLWindow.textBox("textName").setText(name);
-		addWLWindow.textBox("textDesc").setText(desc);
-	}
-
-	@When("The user click the Add button in Add Wishlist view")
-	public void the_user_click_the_add_button_in_add_wishlist_view() {
-		addWLWindow.button("btnAdd").click();
-	}
-
-	@Then("The Add Wishlist view is closed")
-	public void the_add_wishlist_view_is_closed() {
-		addWLWindow.requireNotVisible();
+	
+	@When("The button Remove under items list is clicked")
+	public void the_button_remove_under_items_list_is_clicked() {
+	    mainWindow.button("btnRemoveItem").click();
 	}
 }

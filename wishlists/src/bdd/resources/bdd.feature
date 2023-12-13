@@ -36,13 +36,27 @@ Feature: BDD tests for WishlistSwingApp
     	| Phone  | 
     	| Wallet |
     	
-   Scenario: Add a new wishlist
-    Given The Wishlist App view is shown
-    When The user click the Add button under the wishlists list
-    Then The Add Wishlist view is shown
-    #When The user enter the following values in Add Wishlist view: Name: "Birthday", Description: "My birthday gifts"
-    #And The user click the Add button in Add Wishlist view
-    #Then The Add Wishlist view is closed
-    #And The list of wishlist contains 
-    	#| Birthday  |
+  Scenario: Removing a wishlist
+   Given The database contains the following wishlists
+    	| Birthday  | My birthday gifts     |
+    	| Christmas | My wish for Christmas |
+   When The Wishlist App view is shown
+   And The wishlist "Birthday" is selected
+   And The button Remove under wishlists list is clicked
+   Then The list of wishlist contains 
+    	| Christmas | 
+   
+   Scenario: Removing an item
+    Given The database contains the following wishlists
+    	| Birthday  | My birthday gifts     |
+    	| Christmas | My wish for Christmas |
+    And The wishlist "Birthday" contains the following values
+    	| Phone  | Samsung Galaxy A52 | 300 |
+    	| Wallet | Leather            | 100 |
+    When The Wishlist App view is shown
+    And The wishlist "Birthday" is selected
+    And The item "Phone" is selected
+    And The button Remove under items list is clicked
+    Then The list of item contains
+    	| Wallet |
     
