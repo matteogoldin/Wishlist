@@ -2,10 +2,12 @@ package model;
 
 import java.util.Objects;
 
+import org.hibernate.annotations.NaturalId;
+
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class Item{
+public class Item {
 	private String name;
 	private String description;
 	private float price;

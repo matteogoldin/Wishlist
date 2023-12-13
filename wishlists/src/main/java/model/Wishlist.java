@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 public class Wishlist{
@@ -19,7 +20,8 @@ public class Wishlist{
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(
 	        name="item",
-	        joinColumns= @JoinColumn(name="wishlist_name"))
+	        joinColumns= @JoinColumn(name="wishlist_name"),
+	        uniqueConstraints = @UniqueConstraint(columnNames = {"wishlist_name", "name"}))
 	private List<Item> items;
 	
 	private String description;

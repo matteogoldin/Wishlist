@@ -152,17 +152,26 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 			controller.addWishlist(wl);
 		});
 		window.list("listWL").selectItem(0);
-		GuiActionRunner.execute(() -> {
-			controller.addItemToWishlist(item, wl);
-		});
-		window.list("listWL").selectItem(0);
+		/*
+		 * GuiActionRunner.execute(() -> { controller.addItemToWishlist(item, wl); });
+		 * window.list("listWL").selectItem(0);
+		 */
 		window.button("btnAddItem").click();
 		FrameFixture addItemWindow = WindowFinder.findFrame(matcher).using(robot());
 		addItemWindow.textBox("textName").setText("Phone");
 		addItemWindow.textBox("textDesc").setText("Samsung Galaxy A52");
 		addItemWindow.textBox("textPrice").setText("300");
 		addItemWindow.button("btnAdd").click();
-		window.label("lblError").requireText("Error: please try again or try to refresh");		
+		window.list("listWL").selectItem(0);
+		window.button("btnAddItem").click();
+		addItemWindow = WindowFinder.findFrame(matcher).using(robot());
+		addItemWindow.textBox("textName").setText("Phone");
+		addItemWindow.textBox("textDesc").setText("Samsung Galaxy A52");
+		addItemWindow.textBox("textPrice").setText("300");
+		addItemWindow.button("btnAdd").click();
+		window.label("lblError").requireText("Item Phone is already in Wishlist Birthday");	
+		window.list("listWL").requireItemCount(1);
+		window.list("listItem").requireItemCount(1);
 	}
 
 	@Test
