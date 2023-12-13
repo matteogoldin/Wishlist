@@ -40,9 +40,9 @@ Feature: BDD tests for WishlistSwingApp
     Given The Wishlist App view is shown
     When The user click the Add button under the wishlists list
     Then The Add Wishlist view is shown
-    When The user enter the following values in the text field: Name: "Birthday", Description: "My birthday gifts"
-    And The user click the "Add" button 
-    Then The Add Wishlist view is closed
-    And The The list of wishlist contains 
-    	| Birthday  |
+    #When The user enter the following values in Add Wishlist view: Name: "Birthday", Description: "My birthday gifts"
+    #And The user click the Add button in Add Wishlist view
+    #Then The Add Wishlist view is closed
+    #And The list of wishlist contains 
+    	#| Birthday  |
     

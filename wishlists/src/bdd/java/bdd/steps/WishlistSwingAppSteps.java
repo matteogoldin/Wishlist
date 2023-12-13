@@ -22,13 +22,16 @@ import io.cucumber.java.en.When;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import utils.SQLClient;
+import view.AddWishlistSwingView;
 import view.WishlistSwingView;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/bdd/resources", monochrome = true)
 public class WishlistSwingAppSteps {
 	private SQLClient client;
-	private FrameFixture window;
+	private FrameFixture mainWindow;
+	private FrameFixture addWLWindow;
+	private FrameFixture addItemWindow;
 	private String persistenceUnit = "wishlists-pu-it";
 
 	@Before
@@ -39,8 +42,8 @@ public class WishlistSwingAppSteps {
 
 	@After
 	public void onTearDown() {
-		if (window != null)
-			window.cleanUp();
+		if (mainWindow != null)
+			mainWindow.cleanUp();
 	}
 
 	@Given("The database contains the following wishlists")
@@ -56,10 +59,8 @@ public class WishlistSwingAppSteps {
 
 	@When("The Wishlist App view is shown")
 	public void the_view_is_shown() {
-		application("app.WishlistApp")
-			.withArgs("--persistence-unit=" + persistenceUnit)
-			.start();
-		window = WindowFinder.findFrame(new GenericTypeMatcher<WishlistSwingView>(WishlistSwingView.class) {
+		application("app.WishlistApp").withArgs("--persistence-unit=" + persistenceUnit).start();
+		mainWindow = WindowFinder.findFrame(new GenericTypeMatcher<WishlistSwingView>(WishlistSwingView.class) {
 			@Override
 			protected boolean isMatching(WishlistSwingView frame) {
 				return frame.isShowing();
@@ -69,17 +70,50 @@ public class WishlistSwingAppSteps {
 
 	@When("The wishlist {string} is selected")
 	public void the_wishlist_is_selected(String wlName) {
-		window.list("listWL").selectItem(wlName);
+		mainWindow.list("listWL").selectItem(wlName);
 	}
 
 	@Then("The list of wishlist contains")
 	public void the_list_of_wishlist_contains(List<String> wlNames) {
-		wlNames.forEach(n -> assertThat(window.list("listWL").contents()).anySatisfy(e -> assertThat(e).isEqualTo(n)));
+		wlNames.forEach(
+				n -> assertThat(mainWindow.list("listWL").contents()).anySatisfy(e -> assertThat(e).isEqualTo(n)));
 	}
 
 	@Then("The list of item contains")
 	public void the_list_of_item_contains(List<String> itemNames) {
-		itemNames.forEach(n -> assertThat(window.list("listItem").contents()).anySatisfy(e -> assertThat(e).isEqualTo(n)));
+		itemNames.forEach(
+				n -> assertThat(mainWindow.list("listItem").contents()).anySatisfy(e -> assertThat(e).isEqualTo(n)));
 	}
-	
+
+	@When("The user click the Add button under the wishlists list")
+	public void the_user_click_the_add_button_under_the_wishlists_list() {
+		mainWindow.button("btnAddWL").click();
+	}
+
+	@Then("The Add Wishlist view is shown")
+	public void the_add_wishlist_view_is_shown() {
+		addWLWindow = WindowFinder.findFrame(new GenericTypeMatcher<AddWishlistSwingView>(AddWishlistSwingView.class) {
+			@Override
+			protected boolean isMatching(AddWishlistSwingView frame) {
+				return frame.isShowing();
+			}
+		}).using(BasicRobot.robotWithCurrentAwtHierarchy());
+		addWLWindow.requireVisible();
+	}
+
+	@When("The user enter the following values in Add Wishlist view: Name: {string}, Description: {string}")
+	public void the_user_enter_the_following_values_in_add_wishlist_view_name_description(String name, String desc) {
+		addWLWindow.textBox("textName").setText(name);
+		addWLWindow.textBox("textDesc").setText(desc);
+	}
+
+	@When("The user click the Add button in Add Wishlist view")
+	public void the_user_click_the_add_button_in_add_wishlist_view() {
+		addWLWindow.button("btnAdd").click();
+	}
+
+	@Then("The Add Wishlist view is closed")
+	public void the_add_wishlist_view_is_closed() {
+		addWLWindow.requireNotVisible();
+	}
 }
