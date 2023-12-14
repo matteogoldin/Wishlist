@@ -59,4 +59,3 @@ Feature: BDD tests for WishlistSwingApp
     And The button Remove under items list is clicked
     Then The list of item contains
     	| Wallet |
-    

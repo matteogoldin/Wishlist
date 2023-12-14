@@ -204,6 +204,21 @@
 							</goals>
 						</execution>
 						<execution>
+							<id>e2e-tests</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<excludes>
+									<exclude>**/*IT.java</exclude>
+								</excludes>
+								<includes>
+									<include>**/*E2E.java</include>
+								</includes>
+							</configuration>
+						</execution>
+						<execution>
 							<id>bdd-tests</id>
 							<goals>
 								<goal>integration-test</goal>
@@ -234,6 +249,7 @@
 							<configuration>
 								<sources>
 									<source>src/it/java</source>
+									<source>src/e2e/java</source>
 									<source>src/bdd/java</source>
 								</sources>
 							</configuration>
