@@ -16,7 +16,7 @@ public abstract class BaseDAO<T>{
 
 	private static final Logger LOGGER_BD = LogManager.getLogger(BaseDAO.class);
 
-	public abstract T findById(String Id);
+	public abstract T findById(String id);
 	public abstract void add(T t);
 	public abstract void remove(T t);
 	public abstract List<T> getAll();
