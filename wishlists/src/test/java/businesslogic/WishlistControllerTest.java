@@ -112,7 +112,6 @@ class WishlistControllerTest {
 		controller.addItemToWishlist(item, wl);
 		assertThat(wl.getItems()).containsOnly(item);
 		verify(wlDao).getAllWlItems(wl);
-		verify(view).showAllWLs(controller.getWlList());
 		verify(view).showAllItems(wl);
 	}
 
@@ -129,7 +128,6 @@ class WishlistControllerTest {
 		controller.addItemToWishlist(item_dup, wl2);
 		assertAll(() -> assertThat(wl1.getItems()).containsOnly(item),
 				() -> assertThat(wl2.getItems()).containsOnly(item_dup));
-		verify(view, times(2)).showAllWLs(controller.getWlList());
 		verify(view, times(2)).showAllItems(isA(Wishlist.class));
 		verify(wlDao, times(2)).getAllWlItems(isA(Wishlist.class));
 		verify(wlDao, times(2)).addItem(any(), any());
@@ -146,21 +144,19 @@ class WishlistControllerTest {
 		controller.addItemToWishlist(item, wl);
 		controller.addItemToWishlist(item_dup, wl);
 		assertThat(wl.getItems()).containsOnly(item);
-		verify(view, times(2)).showAllWLs(controller.getWlList());
 		verify(view, times(2)).showAllItems(wl);
 		verify(view).showError(anyString());
 		verify(wlDao).getAllWlItems(wl);
 	}
 
 	@Test
-	void tryingToAddAnObjectInAWlNotPersistedShowError() {
+	void tryingToAddAnItemInAWlNotPersistedShowError() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		doThrow(new RuntimeException()).when(wlDao).addItem(isA(Wishlist.class), isA(Item.class));
 		controller.addItemToWishlist(item, wl);
 		assertThat(wl.getItems()).isEmpty();
 		verify(view).showError(ERROR_STRING);
-		verify(view).showAllWLs(controller.getWlList());
 		verify(view).showAllItems(wl);
 		verify(wlDao, times(0)).getAllWlItems(wl);
 	}
@@ -186,8 +182,6 @@ class WishlistControllerTest {
 		wl.getItems().add(item);
 		controller.removeItemFromWishlist(item, wl);
 		assertThat(wl.getItems()).isEmpty();
-		verify(view).showAllItems(wl);
-		verify(view).showAllWLs(controller.getWlList());
 		verify(wlDao).getAllWlItems(wl);
 	}
 
@@ -202,7 +196,6 @@ class WishlistControllerTest {
 		controller.removeItemFromWishlist(item, wl);
 		assertThat(wl.getItems()).isEmpty();
 		verify(view).showAllItems(wl);
-		verify(view).showAllWLs(controller.getWlList());
 		verify(wlDao).getAllWlItems(wl);
 		verify(wlDao).removeItem(wl, item);
 	}

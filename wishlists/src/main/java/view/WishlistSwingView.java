@@ -54,6 +54,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	private Wishlist selectedWL;
 	
 	public WishlistSwingView() {
+		setTitle("Wishlist App");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 397);
 		contentPane = new JPanel();

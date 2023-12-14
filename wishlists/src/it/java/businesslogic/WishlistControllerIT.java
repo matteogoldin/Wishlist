@@ -37,6 +37,7 @@ class WishlistControllerIT {
 
 	@AfterEach
 	public void releaseMocks() throws Exception {
+		wlDao.getAll().forEach(wl -> wlDao.remove(wl));
 		closeable.close();
 	}
 

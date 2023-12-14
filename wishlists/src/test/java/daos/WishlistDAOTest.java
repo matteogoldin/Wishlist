@@ -14,17 +14,19 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
-import utils.DAOTestsSQLQueries;
+import utils.SQLClient;
 
 class WishlistDAOTest {
 	private WishlistDAO wDao;
 	private EntityManagerFactory emf;
+	private SQLClient client;
+	private String persistentUnit = "wishlists-pu-test";
 
 	@BeforeEach
 	void setup() {
-		wDao = new WishlistDAO("wishlists-pu-test");
-		emf = wDao.getEmf();
-		DAOTestsSQLQueries.initEmptyDB(emf);
+		wDao = new WishlistDAO(persistentUnit);
+		client = new SQLClient(persistentUnit);
+		client.initEmptyDB();
 	}
 
 	@Test
@@ -35,7 +37,7 @@ class WishlistDAOTest {
 	@Test
 	void getAllWhenDatabaseIsNotEmptyReturnANotEmptyList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl, emf);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		assertThat(wDao.getAll()).hasSize(1);
 	}
 
@@ -43,7 +45,7 @@ class WishlistDAOTest {
 	void WishlistCorrectlyInserted() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		wDao.add(wl);
-		Wishlist wl_dup = DAOTestsSQLQueries.findWishlist(wl, emf);
+		Wishlist wl_dup = client.findWishlist(wl.getName());
 		assertThat(wl).isEqualTo(wl_dup);
 	}
 
@@ -65,9 +67,9 @@ class WishlistDAOTest {
 	@Test
 	void wishlistCorrectlyRemoved() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl, emf);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		wDao.remove(wl);
-		assertThat(DAOTestsSQLQueries.findWishlist(wl, emf)).isNull();
+		assertThat(client.findWishlist(wl.getName())).isNull();
 	}
 
 	@Test
@@ -79,21 +81,21 @@ class WishlistDAOTest {
 	@Test
 	void removingAWishlistRemovesAlsoItsItems() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl, emf);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
-		DAOTestsSQLQueries.mergeWishlist(wl, emf);
-		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNotNull();
+		client.mergeWishlist(wl);
+		assertThat(client.findItem(wl.getName(), item.getName())).isNotNull();
 		wDao.remove(wl);
-		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
+		assertThat(client.findItem(wl.getName(), item.getName())).isNull();
 	}
 
 	@Test
 	void getAllCorrectlyRetrieveAllTheWishlists() {
 		Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
 		Wishlist wl2 = new Wishlist("Christmas", "Gift ideas");
-		DAOTestsSQLQueries.insertWishlist(wl1, emf);
-		DAOTestsSQLQueries.insertWishlist(wl2, emf);
+		client.insertWishlist(wl1.getName(), wl1.getDesc());
+		client.insertWishlist(wl2.getName(), wl2.getDesc());
 		List<Wishlist> wlList = wDao.getAll();
 		assertAll(() -> assertThat(wlList).hasSize(2), () -> assertThat(wlList).contains(wl1),
 				() -> assertThat(wlList).contains(wl2));
@@ -107,7 +109,7 @@ class WishlistDAOTest {
 	@Test
 	void findByIdCorrectlyRetrieveAWishlist() {
 		Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl1, emf);
+		client.insertWishlist(wl1.getName(), wl1.getDesc());
 		assertThat(wDao.findById(wl1.getName())).isEqualTo(wl1);
 	}
 
@@ -120,10 +122,10 @@ class WishlistDAOTest {
 	void addItemAddAnItemToAWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
-		DAOTestsSQLQueries.insertWishlist(wl, emf);
-		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
+		client.insertWishlist(wl.getName(), wl.getDesc());
+		assertThat(client.findItem(wl.getName(), item.getDesc())).isNull();
 		wDao.addItem(wl, item);
-		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isEqualTo(item);
+		assertThat(client.findItem(wl.getName(), item.getName())).isEqualTo(item);
 	}
 
 	@Test
@@ -137,13 +139,13 @@ class WishlistDAOTest {
 	@Test
 	void removeItemRemovesItemFromTheWishlist() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl, emf);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		wl.getItems().add(item);
-		DAOTestsSQLQueries.insertItem(wl, item, emf);
-		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNotNull();
+		client.insertItem(wl.getName(), item.getName(), item.getDesc(), item.getPrice());
+		assertThat(client.findItem(wl.getName(), item.getName())).isNotNull();
 		wDao.removeItem(wl, item);
-		assertThat(DAOTestsSQLQueries.findItem(wl, item, emf)).isNull();
+		assertThat(client.findItem(wl.getName(), item.getName())).isNull();
 	}
 	
 	@Test
@@ -157,11 +159,11 @@ class WishlistDAOTest {
 	@Test
 	void getAllWlItemsReturnsAllTheItemsAssociatedToAList() {
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		DAOTestsSQLQueries.insertWishlist(wl, emf);
+		client.insertWishlist(wl.getName(), wl.getDesc());
 		Item item1 = new Item("Phone", "Samsung Galaxy A52", 300);
 		Item item2 = new Item("Wallet", "D&G", 100);
-		DAOTestsSQLQueries.insertItem(wl, item1, emf);
-		DAOTestsSQLQueries.insertItem(wl, item2, emf);
+		client.insertItem(wl.getName(), item1.getName(), item1.getDesc(), item1.getPrice());
+		client.insertItem(wl.getName(), item2.getName(), item2.getDesc(), item2.getPrice());
 		List<Item> itList = wDao.getAllWlItems(wl);
 		assertThat(itList).containsExactly(item1, item2);
 	}
