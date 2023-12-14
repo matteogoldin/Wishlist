@@ -1,4 +1,4 @@
-name: CI code coverage
+name: CI code coverage e code quality
 
 on:
   pull_request:
@@ -21,6 +21,13 @@ jobs:
         with:
           java-version: 11
 
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+          
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
@@ -28,14 +35,17 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
           restore-keys: ${{ runner.os }}-m2-
 
-      - name: Build with Maven and get code coverage
+      - name: Build with Maven and get code coverage and sonar analysis
         run: >
-          xvfb-run mvn verify -Pcoveralls
+          xvfb-run mvn verify -Pcoveralls org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
+          -Dsonar.projectKey=matteogoldin_Wishlist
           -DrepoToken=$COVERALLS_REPO_TOKEN
           -DpullRequest=${{ github.event.pull_request.number }}
         working-directory: ${{ env.workdir }}
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Generate JUnit report
         run: >
