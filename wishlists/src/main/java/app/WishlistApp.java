@@ -3,6 +3,9 @@ package app;
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import businesslogic.WishlistController;
 import daos.WishlistDAO;
 import picocli.CommandLine;
@@ -14,6 +17,8 @@ import view.WishlistSwingView;
 public class WishlistApp implements Callable<Void>{
 	@Option(names = { "--persistence-unit" }, description = "Persistence Unit name")
 	private String persistenceUnit = "wishlists-pu";
+
+	private static final Logger LOGGER = LogManager.getLogger(WishlistApp.class);
 
 	public static void main(String[] args) {
 		new CommandLine(new WishlistApp()).execute(args);
@@ -30,7 +35,7 @@ public class WishlistApp implements Callable<Void>{
 				view.setVisible(true);
 				controller.refreshWishlists();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Error occurs starting the application");
 			}
 		});
 		return null;

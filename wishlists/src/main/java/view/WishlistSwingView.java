@@ -209,18 +209,15 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		scrollPane2.setViewportView(listItem);
 		listItem.setName("listItem");
 		listItem.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listItem.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				clearError();
-				int selectedIndex = listItem.getSelectedIndex();
-				btnRemoveItem.setEnabled(selectedIndex != -1);
-				if (selectedIndex != -1) {
-					Item element = listItemModel.elementAt(selectedIndex);
-					lblItemDesc.setText(String.format("%s (Price: %.2f€)", element.getDesc(), element.getPrice()));
-				} else {
-					lblItemDesc.setText("");
-				}
+		listItem.addListSelectionListener(e -> {
+			clearError();
+			int selectedIndex = listItem.getSelectedIndex();
+			btnRemoveItem.setEnabled(selectedIndex != -1);
+			if (selectedIndex != -1) {
+				Item element = listItemModel.elementAt(selectedIndex);
+				lblItemDesc.setText(String.format("%s (Price: %.2f€)", element.getDesc(), element.getPrice()));
+			} else {
+				lblItemDesc.setText("");
 			}
 		});
 

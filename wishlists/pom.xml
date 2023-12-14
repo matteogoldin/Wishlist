@@ -15,8 +15,21 @@
 		<log4j.version>2.21.1</log4j.version>
 		<junit5.version>5.10.1</junit5.version>
 		<cucumber.version>7.14.1</cucumber.version>
+
+		<!-- sonar properties -->
 		<sonar.organization>matteogoldin</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<!-- code coverage exclusion-->
+		<sonar.coverage.exclusions>**/model/*,**/app/*,**/utils/*</sonar.coverage.exclusions>
+		<!-- Ignore rules -->
+		<sonar.issue.ignore.multicriteria>e117,e2699</sonar.issue.ignore.multicriteria>
+		<!-- naming convention -->
+		<sonar.issue.ignore.multicriteria.e117.ruleKey>java:S117</sonar.issue.ignore.multicriteria.e117.ruleKey>
+		<sonar.issue.ignore.multicriteria.e117.resourceKey>**/*SwingView.java</sonar.issue.ignore.multicriteria.e117.resourceKey>
+		<!-- assertions in test classes -->
+		<sonar.issue.ignore.multicriteria.e2699.ruleKey>java:S2699</sonar.issue.ignore.multicriteria.e2699.ruleKey>
+		<sonar.issue.ignore.multicriteria.e2699.resourceKey>**/*Swing*.java</sonar.issue.ignore.multicriteria.e2699.resourceKey>
+
 	</properties>
 
 	<dependencies>
