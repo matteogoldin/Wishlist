@@ -10,7 +10,7 @@ import io.cucumber.junit.CucumberOptions;
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/bdd/resources", monochrome = true)
 public class WishlistSwingAppBDD {
-	
+
 	@BeforeClass
 	public static void setUpOnce() {
 		FailOnThreadViolationRepaintManager.install();

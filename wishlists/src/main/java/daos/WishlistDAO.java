@@ -11,13 +11,14 @@ import jakarta.persistence.Persistence;
 import model.Item;
 import model.Wishlist;
 
-public class WishlistDAO extends BaseDAO<Wishlist, String> {
+public class WishlistDAO extends BaseDAO<Wishlist> {
 	private static final Logger LOGGER_WD = LogManager.getLogger(WishlistDAO.class);
 
 	public WishlistDAO(String persistentUnit) {
 		emf = Persistence.createEntityManagerFactory(persistentUnit);
 	}
 
+	@Override
 	public Wishlist findById(String id) {
 		Wishlist result = null;
 		openEntityManager();
@@ -33,14 +34,17 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 		return result;
 	}
 
+	@Override
 	public void add(Wishlist wl) {
 		executeInsideTransaction(entitymanager -> entitymanager.persist(wl));
 	}
 
+	@Override
 	public void remove(Wishlist wl) {
 		executeInsideTransaction(entitymanager -> entitymanager.remove(entitymanager.merge(wl)));
 	}
 
+	@Override
 	public List<Wishlist> getAll() {
 		List<Wishlist> result;
 		openEntityManager();
@@ -48,7 +52,7 @@ public class WishlistDAO extends BaseDAO<Wishlist, String> {
 		em.close();
 		return result;
 	}
-	
+
 	public List<Item> getAllWlItems(Wishlist wl) {
 		List<Item> result;
 		openEntityManager();

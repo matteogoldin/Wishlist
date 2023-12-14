@@ -48,7 +48,7 @@ public class WishlistController {
 	}
 
 	public void addItemToWishlist(Item item, Wishlist wl) {
-		
+
 		if(!wl.getItems().contains(item)) {
 			try {
 				wlDao.addItem(wl, item);
@@ -61,7 +61,7 @@ public class WishlistController {
 			view.showError(String.format("Item %s is already in Wishlist %s", item.getName(), wl.getName()));
 		}
 		view.showAllItems(wl);
-		
+
 	}
 
 	public void removeItemFromWishlist(Item item, Wishlist wl) {

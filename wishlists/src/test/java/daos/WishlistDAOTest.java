@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
@@ -18,7 +17,6 @@ import utils.SQLClient;
 
 class WishlistDAOTest {
 	private WishlistDAO wDao;
-	private EntityManagerFactory emf;
 	private SQLClient client;
 	private String persistentUnit = "wishlists-pu-test";
 
@@ -147,7 +145,7 @@ class WishlistDAOTest {
 		wDao.removeItem(wl, item);
 		assertThat(client.findItem(wl.getName(), item.getName())).isNull();
 	}
-	
+
 	@Test
 	void removeItemCanRaiseException() {
 		Wishlist wl = null;

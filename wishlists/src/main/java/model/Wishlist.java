@@ -16,16 +16,16 @@ import jakarta.persistence.UniqueConstraint;
 public class Wishlist{
 	@Id
 	private String name;
-	
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(
 	        name="item",
 	        joinColumns= @JoinColumn(name="wishlist_name"),
 	        uniqueConstraints = @UniqueConstraint(columnNames = {"wishlist_name", "name"}))
 	private List<Item> items;
-	
+
 	private String description;
-	
+
 	public Wishlist() {	}
 
 	public Wishlist(String name, String desc) {
@@ -57,7 +57,7 @@ public class Wishlist{
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(name);
@@ -67,14 +67,12 @@ public class Wishlist{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (getClass() != obj.getClass()))
 			return false;
 		Wishlist other = (Wishlist) obj;
 		return Objects.equals(name, other.name);
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.name;

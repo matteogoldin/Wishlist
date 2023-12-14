@@ -1,6 +1,9 @@
 package view;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -20,9 +23,6 @@ import javax.swing.event.ListSelectionListener;
 import businesslogic.WishlistController;
 import model.Item;
 import model.Wishlist;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 
 public class WishlistSwingView extends JFrame implements WishlistView {
 
@@ -50,9 +50,9 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	private JButton btnAddItem;
 	private JButton btnRemoveItem;
 	private JSeparator separator2;
-	
-	private Wishlist selectedWL;
-	
+
+	private transient Wishlist selectedWL;
+
 	public WishlistSwingView() {
 		setTitle("Wishlist App");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -119,23 +119,20 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		listWL.setToolTipText("");
 		listWL.setName("listWL");
 		listWL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listWL.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				clearError();
-				int selectedIndex = listWL.getSelectedIndex();
-				btnRemoveWL.setEnabled(selectedIndex != -1);
-				btnAddItem.setEnabled(selectedIndex != -1);
-				if (selectedIndex != -1) {
-					showAllItems(listWLModel.elementAt(selectedIndex));
-					lblWLDesc.setText(listWLModel.elementAt(selectedIndex).getDesc());
-					lblItem.setText(String.format("Wishes in %s:", listWLModel.elementAt(selectedIndex).getName()));
-					selectedWL = listWLModel.elementAt(selectedIndex);
-				} else {
-					listItemModel.clear();
-					lblWLDesc.setText("");
-					lblItem.setText("Select a Wishlist...");
-				}
+		listWL.addListSelectionListener(e -> {
+			clearError();
+			int selectedIndex = listWL.getSelectedIndex();
+			btnRemoveWL.setEnabled(selectedIndex != -1);
+			btnAddItem.setEnabled(selectedIndex != -1);
+			if (selectedIndex != -1) {
+				showAllItems(listWLModel.elementAt(selectedIndex));
+				lblWLDesc.setText(listWLModel.elementAt(selectedIndex).getDesc());
+				lblItem.setText(String.format("Wishes in %s:", listWLModel.elementAt(selectedIndex).getName()));
+				selectedWL = listWLModel.elementAt(selectedIndex);
+			} else {
+				listItemModel.clear();
+				lblWLDesc.setText("");
+				lblItem.setText("Select a Wishlist...");
 			}
 		});
 
@@ -265,8 +262,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		contentPane.add(btnRemoveItem, gbc_btnRemoveItem);
 		btnRemoveItem.addActionListener(e -> {
 			clearError();
-			controller.removeItemFromWishlist(listItemModel.get(listItem.getSelectedIndex()),
-					selectedWL);
+			controller.removeItemFromWishlist(listItemModel.get(listItem.getSelectedIndex()), selectedWL);
 		});
 
 		separator2 = new JSeparator();
@@ -307,7 +303,7 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 	public void showError(String errorMessage) {
 		lblError.setText(errorMessage);
 	}
-	
+
 	public void clearError() {
 		lblError.setText("");
 	}

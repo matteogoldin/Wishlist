@@ -1,5 +1,6 @@
 package daos;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,11 +10,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
-public abstract class BaseDAO<T,Q>{
+public abstract class BaseDAO<T>{
 	protected EntityManager em;
 	protected EntityManagerFactory emf;
 
 	private static final Logger LOGGER_BD = LogManager.getLogger(BaseDAO.class);
+
+	public abstract T findById(String Id);
+	public abstract void add(T t);
+	public abstract void remove(T t);
+	public abstract List<T> getAll();
+
 
 	void openEntityManager() {
 		try {

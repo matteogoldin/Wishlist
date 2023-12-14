@@ -1,18 +1,14 @@
 package bdd.steps;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.swing.launcher.ApplicationLauncher.application;
 
-import javax.swing.JFrame;
+import java.util.List;
 
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.GenericTypeMatcher;
-import org.assertj.swing.finder.FrameFinder;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.FrameFixture;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.swing.launcher.ApplicationLauncher.*;
-import org.assertj.swing.timing.Pause;
 import org.junit.runner.RunWith;
 
 import io.cucumber.java.After;
@@ -23,7 +19,6 @@ import io.cucumber.java.en.When;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import utils.SQLClient;
-import view.AddWishlistSwingView;
 import view.WishlistSwingView;
 
 @RunWith(Cucumber.class)
@@ -31,8 +26,6 @@ import view.WishlistSwingView;
 public class WishlistSwingAppSteps {
 	private SQLClient client;
 	private FrameFixture mainWindow;
-	private FrameFixture addWLWindow;
-	private FrameFixture addItemWindow;
 	private String persistenceUnit = "wishlists-pu-it";
 
 	@Before
@@ -61,7 +54,7 @@ public class WishlistSwingAppSteps {
 	@When("The Wishlist App view is shown")
 	public void the_view_is_shown() {
 		application("app.WishlistApp").withArgs("--persistence-unit=" + persistenceUnit).start();
-		mainWindow = WindowFinder.findFrame(new GenericTypeMatcher<WishlistSwingView>(WishlistSwingView.class) {
+		mainWindow = WindowFinder.findFrame(new GenericTypeMatcher<>(WishlistSwingView.class) {
 			@Override
 			protected boolean isMatching(WishlistSwingView frame) {
 				return frame.isShowing();
@@ -85,17 +78,17 @@ public class WishlistSwingAppSteps {
 		itemNames.forEach(
 				n -> assertThat(mainWindow.list("listItem").contents()).anySatisfy(e -> assertThat(e).isEqualTo(n)));
 	}
-	
+
 	@When("The button Remove under wishlists list is clicked")
 	public void the_button_remove_under_wishlists_list_is_clicked() {
 	    mainWindow.button("btnRemoveWL").click();
 	}
-	
+
 	@When("The item {string} is selected")
 	public void the_item_is_selected(String itemName) {
 	    mainWindow.list("listItem").selectItem(itemName);
 	}
-	
+
 	@When("The button Remove under items list is clicked")
 	public void the_button_remove_under_items_list_is_clicked() {
 	    mainWindow.button("btnRemoveItem").click();

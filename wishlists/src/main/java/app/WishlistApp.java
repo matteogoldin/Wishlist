@@ -14,11 +14,11 @@ import view.WishlistSwingView;
 public class WishlistApp implements Callable<Void>{
 	@Option(names = { "--persistence-unit" }, description = "Persistence Unit name")
 	private String persistenceUnit = "wishlists-pu";
-	
+
 	public static void main(String[] args) {
 		new CommandLine(new WishlistApp()).execute(args);
 	}
-	
+
 	@Override
 	public Void call() {
 		EventQueue.invokeLater(() -> {

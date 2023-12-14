@@ -134,40 +134,40 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 			view.getListWLModel().addElement(wl);
 			view.getListItemModel().addElement(item);
 		});
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.button("btnRefresh").click();
 		window.label("lblError").requireText("");
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.list("listWL").selectItem(0);
 		window.label("lblError").requireText("");
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.button("btnAddWL").click();
 		view.getAddWLFrame().dispose();
 		window.label("lblError").requireText("");
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.list("listWL").selectItem(0);
 		window.button("btnRemoveWL").click();
 		window.label("lblError").requireText("");
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.list("listItem").selectItem(0);
 		window.label("lblError").requireText("");
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.button("btnAddItem").click();
 		view.getAddItemFrame().dispose();
 		window.label("lblError").requireText("");
-		
+
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
 		window.list("listItem").selectItem(0);
