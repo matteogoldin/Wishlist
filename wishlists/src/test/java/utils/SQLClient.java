@@ -11,11 +11,11 @@ import model.Wishlist;
 
 public class SQLClient {
 	EntityManagerFactory emf;
-	
+
 	public SQLClient(String persistenceUnit) {
 		emf = Persistence.createEntityManagerFactory(persistenceUnit);
 	}
-	
+
 	public void initEmptyDB() {
 		EntityManager em = emf.createEntityManager();
 		/*
@@ -27,7 +27,7 @@ public class SQLClient {
 	    em.getTransaction().commit();
 		em.close();
 	}
-	
+
 	public void insertWishlist(String name, String desc) {
 		String nativeQuery = "INSERT INTO Wishlist (name, description) VALUES (?, ?)";
 		EntityManager em = emf.createEntityManager();
@@ -39,7 +39,7 @@ public class SQLClient {
 		em.getTransaction().commit();
 		em.close();
 	}
-	
+
 	public Wishlist findWishlist(String name) {
 		EntityManager em = emf.createEntityManager();
 		Wishlist wl_dup = null;
@@ -53,8 +53,8 @@ public class SQLClient {
 		em.close();
 		return wl_dup;
 	}
-	
-	
+
+
 	public Item findItem(String wlName, String itemName) {
 		EntityManager em = emf.createEntityManager();
 		Item item_dup = null;
@@ -69,7 +69,7 @@ public class SQLClient {
 		em.close();
 		return item_dup;
 	}
-	
+
 	public void insertItem(String wlName, String itemName, String itemDesc, float itemPrice) {
 		String nativeQuery = "INSERT INTO item (name, description, price, wishlist_name) VALUES (?, ?, ?, ?)";
 		EntityManager em = emf.createEntityManager();
@@ -83,7 +83,7 @@ public class SQLClient {
 		em.getTransaction().commit();
 		em.close();
 	}
-	
+
 	public List<Item> findAllItemsFromAWL(String wlName) {
 		List<Item> itemList;
 		EntityManager em = emf.createEntityManager();
@@ -99,6 +99,6 @@ public class SQLClient {
 		em.getTransaction().begin();
 		em.merge(wl);
 		em.getTransaction().commit();
-		em.close();		
+		em.close();
 	}
 }

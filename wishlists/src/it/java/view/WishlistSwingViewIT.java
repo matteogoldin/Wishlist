@@ -2,10 +2,6 @@ package view;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.awt.Component;
-
-import javax.swing.JFrame;
-
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -14,15 +10,12 @@ import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 
 import businesslogic.WishlistController;
 import daos.WishlistDAO;
-import jakarta.persistence.EntityManagerFactory;
 import model.Item;
 import model.Wishlist;
-import utils.SQLClient;
 
 @RunWith(GUITestRunner.class)
 public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
@@ -66,7 +59,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.list("listWL").requireItemCount(1);
 		assertThat(dao.getAll()).hasSize(1);
 	}
-	
+
 	@Test
 	@GUITest
 	public void tryingToAddAWishlistArleadyInTheListDisplayError() {
@@ -76,7 +69,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 				return component.isShowing();
 			}
 		};
-		
+
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
 		GuiActionRunner.execute(() -> {
 			controller.addWishlist(wl);
@@ -86,7 +79,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		addWLWindow.textBox("textName").setText("Birthday");
 		addWLWindow.textBox("textDesc").setText("My birthday gifts");
 		addWLWindow.button("btnAdd").click();
-		window.label("lblError").requireText("Error: please try again or try to refresh");		
+		window.label("lblError").requireText("Error: please try again or try to refresh");
 	}
 
 	@Test
@@ -136,7 +129,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.list("listItem").requireItemCount(1);
 		assertThat(dao.getAllWlItems(wl)).hasSize(1);
 	}
-	
+
 	@Test
 	@GUITest
 	public void tryingToAddAItemAlreadyExistenntWithinAWishlistListDisplayError() {
@@ -147,15 +140,10 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 			}
 		};
 		Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
-		Item item = new Item("Phone", "Samsung Galaxy A52", 300);
 		GuiActionRunner.execute(() -> {
 			controller.addWishlist(wl);
 		});
 		window.list("listWL").selectItem(0);
-		/*
-		 * GuiActionRunner.execute(() -> { controller.addItemToWishlist(item, wl); });
-		 * window.list("listWL").selectItem(0);
-		 */
 		window.button("btnAddItem").click();
 		FrameFixture addItemWindow = WindowFinder.findFrame(matcher).using(robot());
 		addItemWindow.textBox("textName").setText("Phone");
@@ -169,7 +157,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		addItemWindow.textBox("textDesc").setText("Samsung Galaxy A52");
 		addItemWindow.textBox("textPrice").setText("300");
 		addItemWindow.button("btnAdd").click();
-		window.label("lblError").requireText("Item Phone is already in Wishlist Birthday");	
+		window.label("lblError").requireText("Item Phone is already in Wishlist Birthday");
 		window.list("listWL").requireItemCount(1);
 		window.list("listItem").requireItemCount(1);
 	}
@@ -191,7 +179,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.list("listItem").requireItemCount(0);
 		assertThat(dao.getAllWlItems(wl)).isEmpty();
 	}
-	
+
 	@Test
 	@GUITest
 	public void refreshBtnUpdateTheItemList() {

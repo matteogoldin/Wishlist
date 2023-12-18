@@ -33,25 +33,26 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		client.insertWishlist("Birthday", "My birthday party");
 		client.insertItem("Birthday", "Phone", "Samsung Galaxy A52", 300);
 		application("app.WishlistApp").withArgs("--persistence-unit=" + persistenceUnit).start();
-		mainWindow = WindowFinder.findFrame(new GenericTypeMatcher<WishlistSwingView>(WishlistSwingView.class) {
+		mainWindow = WindowFinder.findFrame(new GenericTypeMatcher<>(WishlistSwingView.class) {
 			@Override
 			protected boolean isMatching(WishlistSwingView frame) {
 				return frame.isShowing();
 			}
 		}).using(robot());
 	}
-	
+
+	@Override
 	@After
 	public void onTearDown() {
 		if (mainWindow != null)
 			mainWindow.cleanUp();
 	}
-	
+
 	@Test
 	@GUITest
 	public void addingAWLWithAddButtonDisplaysItOnTheView() {
 		mainWindow.button("btnAddWL").click();
-		addWLWindow = WindowFinder.findFrame(new GenericTypeMatcher<AddWishlistSwingView>(AddWishlistSwingView.class) {
+		addWLWindow = WindowFinder.findFrame(new GenericTypeMatcher<>(AddWishlistSwingView.class) {
 			@Override
 			protected boolean isMatching(AddWishlistSwingView frame) {
 				return frame.isShowing();
@@ -65,12 +66,12 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		assertThat(mainWindow.list("listWL").contents()).anySatisfy(wl -> assertThat(wl).isEqualTo("Christmas"));
 		mainWindow.list("listWL").requireItemCount(2);
 	}
-	
+
 	@Test
 	@GUITest
 	public void addingAnAlreadyExistentWLShowError() {
 		mainWindow.button("btnAddWL").click();
-		addWLWindow = WindowFinder.findFrame(new GenericTypeMatcher<AddWishlistSwingView>(AddWishlistSwingView.class) {
+		addWLWindow = WindowFinder.findFrame(new GenericTypeMatcher<>(AddWishlistSwingView.class) {
 			@Override
 			protected boolean isMatching(AddWishlistSwingView frame) {
 				return frame.isShowing();
@@ -84,13 +85,13 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		mainWindow.list("listWL").requireItemCount(1);
 		mainWindow.label("lblError").requireText("Error: please try again or try to refresh");
 	}
-	
+
 	@Test
 	@GUITest
 	public void addingAnItemWithAddButtonDisplaysItOnTheView() {
 		mainWindow.list("listWL").selectItem(0);
 		mainWindow.button("btnAddItem").click();
-		addItemWindow = WindowFinder.findFrame(new GenericTypeMatcher<AddItemSwingView>(AddItemSwingView.class) {
+		addItemWindow = WindowFinder.findFrame(new GenericTypeMatcher<>(AddItemSwingView.class) {
 			@Override
 			protected boolean isMatching(AddItemSwingView frame) {
 				return frame.isShowing();
@@ -105,11 +106,11 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		assertThat(mainWindow.list("listItem").contents()).anySatisfy(item -> assertThat(item).isEqualTo("Wallet"));
 		mainWindow.list("listItem").requireItemCount(2);
 	}
-	
+
 	@Test
 	@GUITest
 	public void addingAnAlreadyExistentItemShowError() {
-		GenericTypeMatcher<AddItemSwingView> matcher = new GenericTypeMatcher<AddItemSwingView>(AddItemSwingView.class) {
+		GenericTypeMatcher<AddItemSwingView> matcher = new GenericTypeMatcher<>(AddItemSwingView.class) {
 			@Override
 			protected boolean isMatching(AddItemSwingView frame) {
 				return frame.isShowing();
@@ -125,7 +126,7 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		addItemWindow.button("btnAdd").click();
 		addItemWindow.requireNotVisible();
 		mainWindow.list("listItem").requireItemCount(2);
-		
+
 		mainWindow.list("listWL").selectItem(0);
 		mainWindow.button("btnAddItem").click();
 		addItemWindow = WindowFinder.findFrame(matcher).using(robot());
@@ -138,5 +139,5 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		mainWindow.list("listItem").requireItemCount(2);
 		mainWindow.label("lblError").requireText("Item Wallet is already in Wishlist Birthday");
 	}
-	
+
 }
