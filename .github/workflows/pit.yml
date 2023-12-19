@@ -2,7 +2,6 @@ name: pitest
 on:
   push:
   pull_request:
-    paths-ignore:
       
 permissions:
   contents: write
