@@ -39,7 +39,6 @@ jobs:
 #        with:
 #          github_token: ${{ secrets.GITHUB_TOKEN }}
 #          publish_dir: ./target/pit-reports
-      
       - name: Archive Pit Reports
         uses: actions/upload-pages-artifact@v1
         with:
