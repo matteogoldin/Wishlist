@@ -1,17 +1,8 @@
 name: pitest
 on:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - '**.md'
-      - '**.yml'
-      - '**.yaml'
   pull_request:
     paths-ignore:
-      - '**.md'
-      - '**.yml'
-      - '**.yaml'
       
 permissions:
   contents: write
