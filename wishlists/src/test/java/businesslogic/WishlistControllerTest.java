@@ -172,7 +172,7 @@ class WishlistControllerTest {
             controller.addItemToWishlist(item_dup, wl);
             assertThat(wl.getItems()).containsOnly(item);
             verify(view, times(2)).showAllItems(wl);
-            verify(view).showError(anyString());
+            verify(view).showError("Item Phone is already in Wishlist Birthday");
             verify(wlDao).getAllWlItems(wl);
         }
 
@@ -261,6 +261,16 @@ class WishlistControllerTest {
             controller.refreshWishlists();
             verify(wlDao).getAll();
             verify(view).showAllWLs(controller.getWlList());
+        }
+        
+        @Test
+        @DisplayName("Refresh wishlist update the wishlist list if not up to date")
+        void refreshWishlistUpdateTheWishlistsListIfNotUpToDate() {
+        	 Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+        	 when(wlDao.getAll()).thenReturn(Arrays.asList(wl));
+        	 controller.refreshWishlists();
+        	 assertThat(controller.getWlList()).contains(wl);
+        	 verify(view).showAllWLs(controller.getWlList());   
         }
 
         @Test

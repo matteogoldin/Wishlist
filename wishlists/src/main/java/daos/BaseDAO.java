@@ -60,8 +60,4 @@ public abstract class BaseDAO<T>{
 	EntityManagerFactory getEmf() {
 		return emf;
 	}
-
-	void setEmf(EntityManagerFactory emf) {
-		this.emf = emf;
-	}
 }

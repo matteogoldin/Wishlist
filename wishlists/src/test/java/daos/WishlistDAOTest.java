@@ -167,7 +167,6 @@ class WishlistDAOTest {
         void addItemCanRaiseException() {
             Wishlist wl = null;
             Item item = null;
-            wDao.setEmf(null);
             assertThatThrownBy(() -> wDao.addItem(wl, item)).isInstanceOf(RuntimeException.class);
         }
     }
@@ -194,7 +193,6 @@ class WishlistDAOTest {
         void removeItemCanRaiseException() {
             Wishlist wl = null;
             Item item = null;
-            wDao.setEmf(null);
             assertThatThrownBy(() -> wDao.removeItem(wl, item)).isInstanceOf(RuntimeException.class);
         }
     }

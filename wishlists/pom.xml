@@ -188,7 +188,7 @@
 							<param>daos.*Test*</param>
 						</targetTests>
 						<mutators>
-							<mutator>DEFAULTS</mutator>
+							<mutator>ALL</mutator>
 						</mutators>
 					</configuration>
 				</plugin>
