@@ -34,23 +34,14 @@ jobs:
         run: xvfb-run mvn verify -Ppit 
         working-directory: ${{ env.workdir }}
         
-#      - name: Deploy
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./target/pit-reports
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/pit-reports
       
 #      - name: Archive Pit Reports
 #        uses: actions/upload-artifact@v2
 #        with:
 #          name: pit-reports
 #          path: '**/target/pit-reports'
-
-      - name: Prepare Pit Reports for Deployment
-        run: find ./target/pit-reports -type f -exec cp --parents {} ./docs \;
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
