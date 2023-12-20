@@ -49,7 +49,7 @@ public class WishlistController {
 
 	public void addItemToWishlist(Item item, Wishlist wl) {
 
-		if(!wl.getItems().contains(item)) {
+		if(wl.getItems().stream().noneMatch(it -> it.getName().equals(item.getName()))) {
 			try {
 				wlDao.addItem(wl, item);
 				wl.setItems(wlDao.getAllWlItems(wl));
