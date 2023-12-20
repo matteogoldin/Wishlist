@@ -118,7 +118,6 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		listWL.setName("listWL");
 		listWL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listWL.addListSelectionListener(e -> {
-			clearError();
 			int selectedIndex = listWL.getSelectedIndex();
 			btnRemoveWL.setEnabled(selectedIndex != -1);
 			btnAddItem.setEnabled(selectedIndex != -1);
@@ -208,7 +207,6 @@ public class WishlistSwingView extends JFrame implements WishlistView {
 		listItem.setName("listItem");
 		listItem.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listItem.addListSelectionListener(e -> {
-			clearError();
 			int selectedIndex = listItem.getSelectedIndex();
 			btnRemoveItem.setEnabled(selectedIndex != -1);
 			if (selectedIndex != -1) {
