@@ -3,7 +3,6 @@ package businesslogic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -262,7 +261,7 @@ class WishlistControllerTest {
             verify(wlDao).getAll();
             verify(view).showAllWLs(controller.getWlList());
         }
-        
+
         @Test
         @DisplayName("Refresh wishlist update the wishlist list if not up to date")
         void refreshWishlistUpdateTheWishlistsListIfNotUpToDate() {
@@ -270,7 +269,7 @@ class WishlistControllerTest {
         	 when(wlDao.getAll()).thenReturn(Arrays.asList(wl));
         	 controller.refreshWishlists();
         	 assertThat(controller.getWlList()).contains(wl);
-        	 verify(view).showAllWLs(controller.getWlList());   
+        	 verify(view).showAllWLs(controller.getWlList());
         }
 
         @Test
@@ -308,4 +307,4 @@ class WishlistControllerTest {
     }
 }
 
-           
+

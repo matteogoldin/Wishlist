@@ -219,6 +219,6 @@ class WishlistDAOTest {
         void getAllWlItemsOnANonPersistedWLReturnsAnEmptyList() {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             assertThat(wDao.getAllWlItems(wl)).isEmpty();
-        }   
+        }
     }
 }
