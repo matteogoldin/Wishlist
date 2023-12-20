@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>attw.projects</groupId>
 	<artifactId>wishlists</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>wishlists</name>
 	<description>A simple Java application for managing wishlists</description>
 
@@ -143,6 +143,30 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<!-- packages source code and dependencies -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.6.0</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+							<configuration>
+								<descriptorRefs>
+									<descriptorRef>jar-with-dependencies</descriptorRef>
+								</descriptorRefs>
+								<archive>
+									<manifest>
+										<mainClass>app.WishlistApp</mainClass>
+									</manifest>
+								</archive>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 				<!-- computes code coverage -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -413,6 +437,10 @@
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
