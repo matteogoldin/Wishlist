@@ -48,20 +48,11 @@ public abstract class BaseDAO<T>{
 	}
 
 	protected void transactionRollbackHandling(EntityTransaction transaction, String errorString) {
-		try {
-			transaction.rollback();
-		} catch (Exception e) {
-			LOGGER_BD.error(errorString);
-		} finally {
-			LOGGER_BD.error(errorString);
-		}
+		transaction.rollback();
+		LOGGER_BD.error(errorString);
 	}
 
 	EntityManagerFactory getEmf() {
 		return emf;
-	}
-
-	void setEmf(EntityManagerFactory emf) {
-		this.emf = emf;
 	}
 }

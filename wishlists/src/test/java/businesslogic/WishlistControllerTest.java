@@ -3,7 +3,6 @@ package businesslogic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -172,7 +171,7 @@ class WishlistControllerTest {
             controller.addItemToWishlist(item_dup, wl);
             assertThat(wl.getItems()).containsOnly(item);
             verify(view, times(2)).showAllItems(wl);
-            verify(view).showError(anyString());
+            verify(view).showError("Item Phone is already in Wishlist Birthday");
             verify(wlDao).getAllWlItems(wl);
         }
 
@@ -264,6 +263,16 @@ class WishlistControllerTest {
         }
 
         @Test
+        @DisplayName("Refresh wishlist update the wishlist list if not up to date")
+        void refreshWishlistUpdateTheWishlistsListIfNotUpToDate() {
+        	 Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+        	 when(wlDao.getAll()).thenReturn(Arrays.asList(wl));
+        	 controller.refreshWishlists();
+        	 assertThat(controller.getWlList()).contains(wl);
+        	 verify(view).showAllWLs(controller.getWlList());
+        }
+
+        @Test
         @DisplayName("Refresh wishlist manages exception from DAO")
         void refreshWishlistManagesExceptionFromDao() {
             when(wlDao.getAll()).thenThrow(new RuntimeException());
@@ -298,4 +307,4 @@ class WishlistControllerTest {
     }
 }
 
-           
+

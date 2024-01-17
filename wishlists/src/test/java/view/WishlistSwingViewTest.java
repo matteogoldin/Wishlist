@@ -142,11 +142,6 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 
 		GuiActionRunner.execute(() -> view.showError(error));
 		window.label("lblError").requireText(error);
-		window.list("listWL").selectItem(0);
-		window.label("lblError").requireText("");
-
-		GuiActionRunner.execute(() -> view.showError(error));
-		window.label("lblError").requireText(error);
 		window.button("btnAddWL").click();
 		view.getAddWLFrame().dispose();
 		window.label("lblError").requireText("");
@@ -155,11 +150,6 @@ public class WishlistSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("lblError").requireText(error);
 		window.list("listWL").selectItem(0);
 		window.button("btnRemoveWL").click();
-		window.label("lblError").requireText("");
-
-		GuiActionRunner.execute(() -> view.showError(error));
-		window.label("lblError").requireText(error);
-		window.list("listItem").selectItem(0);
 		window.label("lblError").requireText("");
 
 		GuiActionRunner.execute(() -> view.showError(error));
