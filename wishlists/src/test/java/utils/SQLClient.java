@@ -18,10 +18,6 @@ public class SQLClient {
 
 	public void initEmptyDB() {
 		EntityManager em = emf.createEntityManager();
-		/*
-		 * em.createNativeQuery("truncate table Item");
-		 * em.createNativeQuery("truncate table Wishlist");
-		 */
 		em.getTransaction().begin();
 		em.createQuery("SELECT w FROM Wishlist w", Wishlist.class).getResultList().forEach(wl -> em.remove(wl));
 	    em.getTransaction().commit();

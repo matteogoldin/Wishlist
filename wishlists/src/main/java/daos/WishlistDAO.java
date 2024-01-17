@@ -15,6 +15,7 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 	private static final Logger LOGGER_WD = LogManager.getLogger(WishlistDAO.class);
 
 	public WishlistDAO(String persistentUnit) {
+		super(Wishlist.class);
 		emf = Persistence.createEntityManagerFactory(persistentUnit);
 	}
 
@@ -23,25 +24,13 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 		Wishlist result = null;
 		openEntityManager();
 		try {
-			result = em.createQuery("SELECT wl FROM Wishlist wl WHERE wl.name = :id", Wishlist.class)
-					.setParameter("id", id)
-					.getSingleResult();
+			result = super.findById(id);
 		} catch (NoResultException e) {
 			LOGGER_WD.info(() -> String.format("No Wishlist found with Id: %s", id));
 		} finally {
 			em.close();
 		}
 		return result;
-	}
-
-	@Override
-	public void add(Wishlist wl) {
-		executeInsideTransaction(entitymanager -> entitymanager.persist(wl));
-	}
-
-	@Override
-	public void remove(Wishlist wl) {
-		executeInsideTransaction(entitymanager -> entitymanager.remove(entitymanager.merge(wl)));
 	}
 
 	@Override

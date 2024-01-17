@@ -11,14 +11,27 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
 public abstract class BaseDAO<T>{
+	private final Class<T> tClass;
 	protected EntityManager em;
 	protected EntityManagerFactory emf;
 
 	private static final Logger LOGGER_BD = LogManager.getLogger(BaseDAO.class);
-
-	public abstract T findById(String id);
-	public abstract void add(T t);
-	public abstract void remove(T t);
+	
+	protected BaseDAO(Class<T> tClass) {
+		this.tClass = tClass;
+	}
+	
+	public T findById(String id) {
+		return em.find(tClass, id);
+	}
+	
+	public void add(T t) {
+		executeInsideTransaction(entitymanager -> entitymanager.persist(t));
+	}
+	
+	public void remove(T t) {
+		executeInsideTransaction(entitymanager -> entitymanager.remove(entitymanager.merge(t)));
+	}
 	public abstract List<T> getAll();
 
 
