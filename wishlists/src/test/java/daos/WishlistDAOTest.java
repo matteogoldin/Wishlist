@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.RollbackException;
 import model.Item;
 import model.Wishlist;
@@ -92,7 +94,9 @@ class WishlistDAOTest {
             client.mergeWishlist(wl);
             assertThat(client.findItem(wl.getName(), item.getName())).isNotNull();
             wDao.remove(wl);
-            assertThat(client.findItem(wl.getName(), item.getName())).isNull();
+            String wl_name = wl.getName();
+            String item_name = item.getName();
+            assertThatThrownBy(() -> client.findItem(wl_name, item_name)).isInstanceOf(NoResultException.class);
         }
     }
 
@@ -157,9 +161,11 @@ class WishlistDAOTest {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             Item item = new Item("Phone", "Samsung Galaxy A52", 300);
             client.insertWishlist(wl.getName(), wl.getDesc());
-            assertThat(client.findItem(wl.getName(), item.getDesc())).isNull();
+            String wl_name = wl.getName();
+            String item_name = item.getName();
+            assertThatThrownBy(() -> client.findItem(wl_name, item_name)).isInstanceOf(NoResultException.class);
             wDao.addItem(wl, item);
-            assertThat(client.findItem(wl.getName(), item.getName())).isEqualTo(item);
+            assertThat(client.findItem(wl_name, item_name)).isEqualTo(item);
         }
 
         @Test
@@ -185,7 +191,9 @@ class WishlistDAOTest {
             client.insertItem(wl.getName(), item.getName(), item.getDesc(), item.getPrice());
             assertThat(client.findItem(wl.getName(), item.getName())).isNotNull();
             wDao.removeItem(wl, item);
-            assertThat(client.findItem(wl.getName(), item.getName())).isNull();
+            String wl_name = wl.getName();
+            String item_name = item.getName();
+            assertThatThrownBy(() -> client.findItem(wl_name, item_name)).isInstanceOf(NoResultException.class);
         }
 
         @Test

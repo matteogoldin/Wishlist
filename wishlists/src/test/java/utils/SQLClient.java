@@ -25,45 +25,30 @@ public class SQLClient {
 	}
 
 	public void insertWishlist(String name, String desc) {
-		String nativeQuery = "INSERT INTO Wishlist (name, description) VALUES (?, ?)";
+		Wishlist wl = new Wishlist(name, desc);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		em.createNativeQuery(nativeQuery)
-			.setParameter(1, name)
-			.setParameter(2, desc)
-			.executeUpdate();
+		em.persist(wl);
 		em.getTransaction().commit();
 		em.close();
 	}
 
 	public Wishlist findWishlist(String name) {
 		EntityManager em = emf.createEntityManager();
-		Wishlist wl_dup = null;
-		try {
-			wl_dup = em.createQuery("SELECT wl FROM Wishlist wl WHERE wl.name = :name", Wishlist.class)
-				.setParameter("name", name)
-				.getSingleResult();
-		} catch (NoResultException e) {
-			wl_dup = null;
-		}
+		Wishlist wl = em.find(Wishlist.class, name);
 		em.close();
-		return wl_dup;
+		return wl;
 	}
 
 
 	public Item findItem(String wlName, String itemName) {
 		EntityManager em = emf.createEntityManager();
-		Item item_dup = null;
-		try {
-			item_dup = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name AND it.name = :it_name", Item.class)
+		Item item = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name AND it.name = :it_name", Item.class)
 					.setParameter("wl_name", wlName)
 					.setParameter("it_name", itemName)
 					.getSingleResult();
-		} catch (NoResultException e) {
-			item_dup = null;
-		}
 		em.close();
-		return item_dup;
+		return item;
 	}
 
 	public void insertItem(String wlName, String itemName, String itemDesc, float itemPrice) {
@@ -81,9 +66,8 @@ public class SQLClient {
 	}
 
 	public List<Item> findAllItemsFromAWL(String wlName) {
-		List<Item> itemList;
 		EntityManager em = emf.createEntityManager();
-		itemList = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name", Item.class)
+		List<Item> itemList = em.createQuery("SELECT it FROM Wishlist wl JOIN wl.items it WHERE wl.name = :wl_name", Item.class)
 				.setParameter("wl_name", wlName)
 				.getResultList();
 		em.close();
