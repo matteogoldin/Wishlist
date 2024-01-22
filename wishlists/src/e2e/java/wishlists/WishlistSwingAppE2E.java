@@ -83,7 +83,7 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		addWLWindow.button("btnAdd").click();
 		addWLWindow.requireNotVisible();
 		mainWindow.list("listWL").requireItemCount(1);
-		mainWindow.label("lblError").requireText("Error: please try again or try to refresh");
+		mainWindow.label("lblError").requireText("Wishlist Birthday already exists");
 	}
 
 	@Test
