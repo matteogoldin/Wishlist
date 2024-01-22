@@ -60,12 +60,23 @@ class WishlistControllerTest {
         void addingWLWithSameNameShowError() {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             Wishlist wl_dup = new Wishlist("Birthday", "Mum birthday gifts");
-            doNothing().doThrow(new RuntimeException()).when(wlDao).add(isA(Wishlist.class));
+            doNothing().when(wlDao).add(isA(Wishlist.class));
             controller.addWishlist(wl);
             controller.addWishlist(wl_dup);
             assertThat(controller.getWlList()).hasSize(1);
             verify(view, times(2)).showAllWLs(controller.getWlList());
             verify(view).showError("Wishlist Birthday already exists");
+        }
+        
+        @Test
+        @DisplayName("Database errors while adding a wishlist shows error")
+        void addWLDatabaseErrorsShowsError() {
+        	Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+        	doThrow(RuntimeException.class).when(wlDao).add(wl);
+        	controller.addWishlist(wl);
+        	assertThat(controller.getWlList()).isEmpty();
+        	verify(view).showError(ERROR_STRING);
+        	 verify(view).showAllWLs(controller.getWlList());
         }
     }
 
