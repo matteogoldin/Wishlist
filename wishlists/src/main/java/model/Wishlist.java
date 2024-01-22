@@ -57,6 +57,14 @@ public class Wishlist{
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
+	
+	public void addItem(Item item) {
+		items.add(item);
+	}
+	
+	public void removeItem(Item item) {
+		items.remove(item);
+	}
 
 	@Override
 	public int hashCode() {
