@@ -17,6 +17,7 @@ public class WishlistController {
 	private List<Wishlist> wlList;
 
 	private static final Logger LOGGER = LogManager.getLogger(WishlistController.class);
+	private static final String LOG_ERROR = "Database error";
 	private static final String ERROR_STRING = "Error: please try again or try to refresh";
 
 	public WishlistController(WishlistView view, WishlistDAO wlDao) {
@@ -26,12 +27,19 @@ public class WishlistController {
 	}
 
 	public void addWishlist(Wishlist wl) {
-		try {
-			wlDao.add(wl);
-			wlList = wlDao.getAll();
-			LOGGER.info(() -> String.format("Wishlist %s correctly inserted", wl.getName()));
-		} catch (RuntimeException e) {
-			view.showError(ERROR_STRING);
+		if(wlList.stream().noneMatch(w -> w.getName().equals(wl.getName()))) {
+			try {
+				wlDao.add(wl);
+				wlList.add(wl);
+				LOGGER.info(() -> String.format("Wishlist %s correctly inserted", wl.getName()));
+			} catch (RuntimeException e) {
+				view.showError(ERROR_STRING);
+				LOGGER.error(LOG_ERROR);
+			}
+		} else {
+			String error = String.format("Wishlist %s already exists", wl.getName());
+			view.showError(error);
+			LOGGER.error(error);
 		}
 		view.showAllWLs(wlList);
 	}
@@ -39,26 +47,29 @@ public class WishlistController {
 	public void removeWishlist(Wishlist wl) {
 		try {
 			wlDao.remove(wl);
-			wlList = wlDao.getAll();
+			wlList.remove(wl);
 			LOGGER.info(() -> String.format("Wishlist %s correctly removed", wl.getName()));
 		} catch (RuntimeException e) {
 			view.showError(ERROR_STRING);
+			LOGGER.error(LOG_ERROR);
 		}
 		view.showAllWLs(wlList);
 	}
 
 	public void addItemToWishlist(Item item, Wishlist wl) {
-
 		if(wl.getItems().stream().noneMatch(it -> it.getName().equals(item.getName()))) {
 			try {
 				wlDao.addItem(wl, item);
-				wl.setItems(wlDao.getAllWlItems(wl));
+				wl.addItem(item);
 				LOGGER.info(() -> String.format("Item %s correctly added to Wishlist %s", item.getName(), wl.getName()));
 			} catch (RuntimeException e) {
 				view.showError(ERROR_STRING);
+				LOGGER.error(LOG_ERROR);
 			}
 		} else {
-			view.showError(String.format("Item %s is already in Wishlist %s", item.getName(), wl.getName()));
+			String error = String.format("Item %s is already in Wishlist %s", item.getName(), wl.getName());
+			view.showError(error);
+			LOGGER.error(error);
 		}
 		view.showAllItems(wl);
 
@@ -67,10 +78,11 @@ public class WishlistController {
 	public void removeItemFromWishlist(Item item, Wishlist wl) {
 		try {
 			wlDao.removeItem(wl, item);
-			wl.setItems(wlDao.getAllWlItems(wl));
+			wl.removeItem(item);
 			LOGGER.info(() -> String.format("Item %s correctly removed from Wishlist %s", item.getName(), wl.getName()));
 		} catch (RuntimeException e) {
 			view.showError(ERROR_STRING);
+			LOGGER.error(LOG_ERROR);
 		}
 		view.showAllItems(wl);
 	}

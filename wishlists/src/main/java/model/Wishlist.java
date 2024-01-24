@@ -58,6 +58,14 @@ public class Wishlist{
 		this.items = items;
 	}
 
+	public void addItem(Item item) {
+		items.add(item);
+	}
+
+	public void removeItem(Item item) {
+		items.remove(item);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(name);

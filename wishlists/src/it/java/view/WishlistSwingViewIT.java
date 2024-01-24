@@ -79,7 +79,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		addWLWindow.textBox("textName").setText("Birthday");
 		addWLWindow.textBox("textDesc").setText("My birthday gifts");
 		addWLWindow.button("btnAdd").click();
-		window.label("lblError").requireText("Error: please try again or try to refresh");
+		window.label("lblError").requireText("Wishlist Birthday already exists");
 	}
 
 	@Test
