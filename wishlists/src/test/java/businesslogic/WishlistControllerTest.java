@@ -67,7 +67,7 @@ class WishlistControllerTest {
             verify(view, times(2)).showAllWLs(controller.getWlList());
             verify(view).showError("Wishlist Birthday already exists");
         }
-        
+
         @Test
         @DisplayName("Database errors while adding a wishlist shows error")
         void addWLDatabaseErrorsShowsError() {
