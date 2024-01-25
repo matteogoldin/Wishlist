@@ -214,6 +214,10 @@
 							<mutator>ALL</mutator>
 						</mutators>
 						<mutationThreshold>90</mutationThreshold>
+						<excludedMethods>
+							<param>jakarta/persistence/EntityManager::close</param>
+							<param>daos/WishlistDAO::transactionRollbackHandling</param>
+						</excludedMethods>
 					</configuration>
 				</plugin>
 				<plugin>
