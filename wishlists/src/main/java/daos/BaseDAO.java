@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import utils.DoNotMutate;
 
 public abstract class BaseDAO<T>{
 	protected EntityManager em;
@@ -47,8 +46,7 @@ public abstract class BaseDAO<T>{
 			em.close();
 		}
 	}
-	
-	@DoNotMutate
+
 	protected void transactionRollbackHandling(EntityTransaction transaction, String errorString) {
 		transaction.rollback();
 		LOGGER_BD.error(errorString);
