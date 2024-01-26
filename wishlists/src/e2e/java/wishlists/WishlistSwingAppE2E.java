@@ -137,7 +137,7 @@ public class WishlistSwingAppE2E extends AssertJSwingJUnitTestCase{
 		addItemWindow.button("btnAdd").click();
 		addItemWindow.requireNotVisible();
 		mainWindow.list("listItem").requireItemCount(2);
-		mainWindow.label("lblError").requireText("Item Wallet is already in Wishlist Birthday");
+		mainWindow.label("lblError").requireText("Item Wallet is already in the Wishlist");
 	}
 
 }

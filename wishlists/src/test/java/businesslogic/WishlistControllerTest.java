@@ -176,7 +176,7 @@ class WishlistControllerTest {
             assertThat(wl.getItems()).containsOnly(item, item2);
             verify(wlDao, times(2)).addItem(isA(Wishlist.class), isA(Item.class));
             verify(view, times(3)).showAllItems(wl);
-            verify(view).showError("Item Phone is already in Wishlist Birthday");
+            verify(view).showError("Item Phone is already in the Wishlist");
         }
 
         @Test

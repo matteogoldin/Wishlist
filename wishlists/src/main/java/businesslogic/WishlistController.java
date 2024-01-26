@@ -67,7 +67,7 @@ public class WishlistController {
 				LOGGER.error(LOG_ERROR);
 			}
 		} else {
-			String error = String.format("Item %s is already in Wishlist %s", item.getName(), wl.getName());
+			String error = String.format("Item %s is already in the Wishlist", item.getName());
 			view.showError(error);
 			LOGGER.error(error);
 		}
