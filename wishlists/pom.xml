@@ -214,10 +214,6 @@
 							<mutator>ALL</mutator>
 						</mutators>
 						<mutationThreshold>90</mutationThreshold>
-						<excludedMethods>
-							<param>close</param>
-							<param>transactionRollbackHandling</param>
-						</excludedMethods>
 					</configuration>
 				</plugin>
 				<plugin>
