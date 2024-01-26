@@ -214,10 +214,10 @@
 							<mutator>ALL</mutator>
 						</mutators>
 						<mutationThreshold>90</mutationThreshold>
-						<avoidCallsTo>
-							<avoidCallsTo>jakarta.persistence.EntityManager.close</avoidCallsTo>
-							<avoidCallsTo>daos.WishlistDAO.transactionRollbackHandling</avoidCallsTo>
-						</avoidCallsTo>
+						<excludedMethods>
+							<param>close</param>
+							<param>transactionRollbackHandling</param>
+						</excludedMethods>
 					</configuration>
 				</plugin>
 				<plugin>
