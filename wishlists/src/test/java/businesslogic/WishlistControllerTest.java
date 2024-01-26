@@ -59,12 +59,14 @@ class WishlistControllerTest {
         @DisplayName("Adding wishlist with the same name shows error")
         void addingWLWithSameNameShowError() {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
+            Wishlist wl2 = new Wishlist("Christmas", "Christmas gifts");
             Wishlist wl_dup = new Wishlist("Birthday", "Mum birthday gifts");
             doNothing().when(wlDao).add(isA(Wishlist.class));
             controller.addWishlist(wl);
+            controller.addWishlist(wl2);
             controller.addWishlist(wl_dup);
-            assertThat(controller.getWlList()).hasSize(1);
-            verify(view, times(2)).showAllWLs(controller.getWlList());
+            assertThat(controller.getWlList()).hasSize(2);
+            verify(view, times(3)).showAllWLs(controller.getWlList());
             verify(view).showError("Wishlist Birthday already exists");
         }
 
@@ -164,15 +166,17 @@ class WishlistControllerTest {
         void tryingToAddADuplicatedItemToSameWishlistShowError() {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             Item item = new Item("Phone", "Samsung Galaxy A52", 300);
+            Item item2 = new Item("Wallet", "Leather", 100);
             Item item_dup = new Item("Phone", "Samsung Galaxy A52", 300);
             doNothing().when(wlDao).addItem(isA(Wishlist.class), isA(Item.class));
             controller.getWlList().add(wl);
             controller.addItemToWishlist(item, wl);
+            controller.addItemToWishlist(item2, wl);
             controller.addItemToWishlist(item_dup, wl);
-            assertThat(wl.getItems()).containsOnly(item);
-            verify(wlDao).addItem(isA(Wishlist.class), isA(Item.class));
-            verify(view, times(2)).showAllItems(wl);
-            verify(view).showError("Item Phone is already in Wishlist Birthday");
+            assertThat(wl.getItems()).containsOnly(item, item2);
+            verify(wlDao, times(2)).addItem(isA(Wishlist.class), isA(Item.class));
+            verify(view, times(3)).showAllItems(wl);
+            verify(view).showError("Item Phone is already in the Wishlist");
         }
 
         @Test

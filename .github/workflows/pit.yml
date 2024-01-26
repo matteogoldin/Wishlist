@@ -36,6 +36,7 @@ jobs:
       
       - name: Archive Pit Reports
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: pit-reports
           path: '**/target/pit-reports'

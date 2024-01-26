@@ -157,7 +157,7 @@ public class WishlistSwingViewIT extends AssertJSwingJUnitTestCase {
 		addItemWindow.textBox("textDesc").setText("Samsung Galaxy A52");
 		addItemWindow.textBox("textPrice").setText("300");
 		addItemWindow.button("btnAdd").click();
-		window.label("lblError").requireText("Item Phone is already in Wishlist Birthday");
+		window.label("lblError").requireText("Item Phone is already in the Wishlist");
 		window.list("listWL").requireItemCount(1);
 		window.list("listItem").requireItemCount(1);
 	}
