@@ -63,7 +63,7 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 		return result;
 	}
 
-	public void addItem(Wishlist wl, Item item) {
+	public void addItem(Wishlist wl, Item item){
 		Wishlist wlPersisted;
 		EntityTransaction transaction = null;
 		try {
@@ -75,7 +75,7 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 			transaction.commit();
 			em.close();
 		} catch (RuntimeException e) {
-			transactionRollbackHandling(transaction, "Errors executing the transaction");
+			LOGGER_WD.error("Errors adding Item to Wishlist");			
 			throw e;
 		}
 	}
@@ -92,7 +92,7 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 			transaction.commit();
 			em.close();
 		} catch (RuntimeException e) {
-			transactionRollbackHandling(transaction, "Errors executing the transaction");
+			LOGGER_WD.error("Errors removing Item from Wishlist");
 			throw e;
 		}
 	}
