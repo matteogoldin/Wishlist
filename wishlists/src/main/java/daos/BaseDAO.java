@@ -40,8 +40,6 @@ public abstract class BaseDAO<T>{
 			action.accept(em);
 			transaction.commit();
 		} catch (RuntimeException e) {
-			if(transaction != null)
-				transaction.rollback();
 			LOGGER_BD.error("Errors executing the transaction");
 			throw e;
 		} finally {
