@@ -53,6 +53,7 @@ class WishlistDAOTest {
             Wishlist wl_dup = new Wishlist("Birthday", "My mum birthday gifts");
             wDao.add(wl_dup);
             assertThatThrownBy(() -> wDao.add(wl)).isInstanceOf(RollbackException.class);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -75,6 +76,7 @@ class WishlistDAOTest {
             client.insertWishlist(wl.getName(), wl.getDesc());
             wDao.remove(wl);
             assertThat(client.findWishlist(wl.getName())).isNull();
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -82,6 +84,7 @@ class WishlistDAOTest {
         void removingANonPersistedWishlist() {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             assertDoesNotThrow(() -> wDao.remove(wl));
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -97,6 +100,7 @@ class WishlistDAOTest {
             String wl_name = wl.getName();
             String item_name = item.getName();
             assertThatThrownBy(() -> client.findItem(wl_name, item_name)).isInstanceOf(NoResultException.class);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
     }
 
@@ -108,6 +112,7 @@ class WishlistDAOTest {
         @DisplayName("Get all when the database is empty returns an empty list")
         void getAllWhenDatabaseIsEmptyReturnEmptyList() {
             assertThat(wDao.getAll()).isEmpty();
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -116,6 +121,7 @@ class WishlistDAOTest {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             client.insertWishlist(wl.getName(), wl.getDesc());
             assertThat(wDao.getAll()).hasSize(1);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -129,6 +135,7 @@ class WishlistDAOTest {
             assertAll(() -> assertThat(wlList).hasSize(2),
                       () -> assertThat(wlList).contains(wl1),
                       () -> assertThat(wlList).contains(wl2));
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
     }
 
@@ -142,12 +149,14 @@ class WishlistDAOTest {
             Wishlist wl1 = new Wishlist("Birthday", "My birthday gifts");
             client.insertWishlist(wl1.getName(), wl1.getDesc());
             assertThat(wDao.findById(wl1.getName())).isEqualTo(wl1);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
         @DisplayName("Find by Id returns null if wishlist is not persisted")
         void findByIdReturnNullIfWishlistIsNotPersisted() {
             assertThat(wDao.findById("Birthday")).isNull();
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
     }
 
@@ -166,6 +175,7 @@ class WishlistDAOTest {
             assertThatThrownBy(() -> client.findItem(wl_name, item_name)).isInstanceOf(NoResultException.class);
             wDao.addItem(wl, item);
             assertThat(client.findItem(wl_name, item_name)).isEqualTo(item);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -174,6 +184,7 @@ class WishlistDAOTest {
             Wishlist wl = null;
             Item item = null;
             assertThatThrownBy(() -> wDao.addItem(wl, item)).isInstanceOf(RuntimeException.class);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
     }
 
@@ -194,6 +205,7 @@ class WishlistDAOTest {
             String wl_name = wl.getName();
             String item_name = item.getName();
             assertThatThrownBy(() -> client.findItem(wl_name, item_name)).isInstanceOf(NoResultException.class);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -202,6 +214,7 @@ class WishlistDAOTest {
             Wishlist wl = null;
             Item item = null;
             assertThatThrownBy(() -> wDao.removeItem(wl, item)).isInstanceOf(RuntimeException.class);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
     }
 
@@ -220,6 +233,7 @@ class WishlistDAOTest {
             client.insertItem(wl.getName(), item2.getName(), item2.getDesc(), item2.getPrice());
             List<Item> itList = wDao.getAllWlItems(wl);
             assertThat(itList).containsExactly(item1, item2);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test
@@ -227,6 +241,7 @@ class WishlistDAOTest {
         void getAllWlItemsOnANonPersistedWLReturnsAnEmptyList() {
             Wishlist wl = new Wishlist("Birthday", "My birthday gifts");
             assertThat(wDao.getAllWlItems(wl)).isEmpty();
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
     }
 }

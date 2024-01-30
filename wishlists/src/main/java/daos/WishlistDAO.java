@@ -73,10 +73,11 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 			wlPersisted = em.find(Wishlist.class, wl.getName());
 			wlPersisted.getItems().add(item);
 			transaction.commit();
-			em.close();
 		} catch (RuntimeException e) {
 			LOGGER_WD.error("Errors adding Item to Wishlist");			
 			throw e;
+		} finally {
+			em.close();
 		}
 	}
 
@@ -90,10 +91,11 @@ public class WishlistDAO extends BaseDAO<Wishlist> {
 			wlPersisted = em.find(Wishlist.class, wl.getName());
 			wlPersisted.getItems().remove(item);
 			transaction.commit();
-			em.close();
 		} catch (RuntimeException e) {
 			LOGGER_WD.error("Errors removing Item from Wishlist");
 			throw e;
+		} finally {
+			em.close();
 		}
 	}
 
