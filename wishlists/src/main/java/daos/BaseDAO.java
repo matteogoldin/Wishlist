@@ -40,16 +40,13 @@ public abstract class BaseDAO<T>{
 			action.accept(em);
 			transaction.commit();
 		} catch (RuntimeException e) {
-			transactionRollbackHandling(transaction, "Errors executing the transaction");
+			if(transaction != null)
+				transaction.rollback();
+			LOGGER_BD.error("Errors executing the transaction");
 			throw e;
 		} finally {
 			em.close();
 		}
-	}
-
-	protected void transactionRollbackHandling(EntityTransaction transaction, String errorString) {
-		transaction.rollback();
-		LOGGER_BD.error(errorString);
 	}
 
 	EntityManagerFactory getEmf() {
