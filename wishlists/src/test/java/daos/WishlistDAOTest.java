@@ -43,6 +43,7 @@ class WishlistDAOTest {
             wDao.add(wl);
             Wishlist wl_dup = client.findWishlist(wl.getName());
             assertThat(wl).isEqualTo(wl_dup);
+            assertThat(wDao.getEm().isOpen()).isFalse();
         }
 
         @Test

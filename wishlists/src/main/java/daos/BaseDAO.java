@@ -50,4 +50,8 @@ public abstract class BaseDAO<T>{
 	EntityManagerFactory getEmf() {
 		return emf;
 	}
+	
+	EntityManager getEm() {
+		return em;
+	}	
 }

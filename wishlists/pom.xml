@@ -214,7 +214,7 @@
 							<mutator>ALL</mutator>
 						</mutators>
 						<avoidCallsTo>
-							<avoidCallsTo>jakarta.persistence</avoidCallsTo>
+							<!-- <avoidCallsTo>jakarta.persistence</avoidCallsTo> -->
 							<avoidCallsTo>org.apache.logging</avoidCallsTo>
 						</avoidCallsTo>
 						<mutationThreshold>90</mutationThreshold>
